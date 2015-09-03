@@ -1,0 +1,27 @@
+.meals-index
+  h1 My meals
+
+  /! ko foreach: days
+  .date-reg
+    .date 
+      .day   data-bind='text: day'
+      .month data-bind='text: month'
+    .meals
+      /! ko foreach: meals
+      .meal-reg
+        .time     data-bind='text: time'
+        .meal     data-bind='text: meal'
+        .calories data-bind='text: calories'
+      /! /ko
+    .total data-bind='text: total'
+  /! /ko
+  
+  = link_to 'New Meal', new_meal_path
+
+
+javascript:
+  window.meals_json = #{raw @meals.to_json(except: [:created_at, :updated_at])}
+  
+coffee:
+  vm = new MealsApp.MealsIndexViewModel(meals_json)
+  $ -> ko.applyBindings vm, $('.meals-index')[0] 

@@ -26,6 +26,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'slim-rails'
 gem 'knockoutjs-rails'
+gem "font-awesome-rails"
+gem 'momentjs-rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -49,7 +51,8 @@ group :development, :test do
   gem 'rspec-rails'          
   gem 'capybara'             
   gem 'guard-rails'          
-  gem 'guard-rspec'          
+  gem 'guard-rspec'   
+  gem 'guard-jasmine'       
   gem 'jasmine-rails'        
   gem 'selenium-webdriver'   
   gem 'shoulda-matchers'     

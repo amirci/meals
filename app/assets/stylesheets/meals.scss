@@ -1,0 +1,60 @@
+// Place all the styles related to the meals controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.meals-index {
+
+  .date-reg {
+    width: 100%;
+    display: table;
+    
+    .date { 
+      width: 100px;
+      display: table-cell;
+      padding:10px;
+      text-align:center;
+      .day { 
+        border: 1px solid #999;
+        border-radius: 5px 5px 0 0;
+        letter-spacing: 2px;
+        padding: 5px;
+      }
+      .month { 
+        text-transform: uppercase;
+        background: #999 none repeat scroll 0 0;
+        border-radius: 0 0 5px 5px;
+        color: #fff;
+        padding: 5px 10px;      
+      }
+    }
+    .total {
+      display: table-cell;
+      text-align: right;
+      width: 100px;
+    }
+    
+    .meals {
+      display: table-cell;
+      .meal-reg {
+        display:table ;
+        width: 100%;
+        margin-bottom: 10px;
+        
+        .time, .meal, .calories {
+          display:table-cell;
+        }
+        .time {
+          width: 80px;
+        }
+        
+        .calories {
+          width: 100px;
+          text-align: right;
+        }  
+      }
+  
+    }
+  }
+  
+  
+}

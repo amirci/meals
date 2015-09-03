@@ -16,3 +16,9 @@
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import "font-awesome";
+
+body {
+    min-height: 2000px;
+    padding-top: 70px;
+}
