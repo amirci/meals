@@ -34,11 +34,12 @@ RSpec.describe MealsController, type: :controller do
 
   describe "GET #index" do
     before do
+      FoodDiary.create_days 1
     end
-    it "assigns all meals as @meals" do
-      meal = Meal.create! valid_attributes
+    it "assigns all meals grouped by date @meals" do
+      meals = Meal.totals_by_date
       get :index, {}, valid_session
-      expect(assigns(:meals)).to eq([meal])
+      expect(assigns(:meals)).to eq meals
     end
   end
 

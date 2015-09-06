@@ -2,31 +2,22 @@
 class MealsApp.MealsIndexViewModel
   
   constructor: (meals) ->
-    days = {}
-    (@insertDay(days, m) for m in meals)
-    @days = (v for k, v of days).sort (d1, d2) ->
+    @days = (new DayMealsViewModel(m) for m in meals)
     
-  insertDay: (days, m) ->
-    days[m.logged_at] = new DailyMealsViewModel(m) unless days[m.logged_at]
-    days[m.logged_at].addMeal m
     
-class DailyMealsViewModel
+class DayMealsViewModel
   
   constructor: (m) ->
-    @loggedAt = m.logged_at
-    @moment = moment(m.logged_at)
+    @moment = moment(m.date)
     @day    = @moment.format('MMM D')
     @month  = @moment.format('YYYY')
-    @total  = 0
-    @meals  = []
+    @total  = m.calories
+    @meals  = (new MealViewModel(meal) for meal in m.meals)
 
-  addMeal: (m) ->
-    @total += m.calories
-    @meals.push new MealViewModel(m)
     
 class MealViewModel
   
   constructor: (m) ->
     @calories = m.calories
-    @time     = moment(m.logged_at).format('HH:MM')
+    @time     = moment(m.logged_at).format('HH:mm')
     @meal     = m.meal

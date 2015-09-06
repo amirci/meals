@@ -66,13 +66,17 @@ end
 module FoodDiary
 
   def self.create_for(date)
-    [:breakfast, :morning_snack, :lunch, :afternoon_snack, :supper].each do |meal|
+    [:breakfast, :morning_snack, :lunch, :afternoon_snack, :supper].map do |meal|
       FactoryGirl.create meal, date: date
     end
   end
   
-  def self.last_month
-    30.times { |i| create_for i.days.ago }
+  def self.create_days(number)
+    number.times { |i| create_for i.days.ago }
+  end
+  
+  def self.populate_month
+    create_days 30
   end
   
 end
@@ -89,7 +93,7 @@ FactoryGirl.define do
     calories  { Faker::Number.between(100, 1200) }
 
     factory :supper do
-      after(:build) { |meal| meal.logged_at = meal.logged_at.change(hour: 7, min:00) }
+      after(:build) { |meal| meal.logged_at = meal.logged_at.change(hour: 19, min:00) }
     end
 
     factory :lunch do

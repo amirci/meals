@@ -1,24 +1,10 @@
 class MealsController < ApplicationController
-  before_action :set_meal, only: [:show, :edit, :update, :destroy]
+  before_action :set_meal, only: [:update, :destroy]
 
   # GET /meals
   # GET /meals.json
   def index
-    @meals = Meal.all
-  end
-
-  # GET /meals/1
-  # GET /meals/1.json
-  def show
-  end
-
-  # GET /meals/new
-  def new
-    @meal = Meal.new
-  end
-
-  # GET /meals/1/edit
-  def edit
+    @meals = Meal.totals_by_date
   end
 
   # POST /meals
