@@ -4,6 +4,9 @@
     .btn.btn-default.new-meal
       .fa.fa-plus data-title='Add a new one'
 
+  .empty-meals data-bind='visible: days.length == 0'
+    .message No entries are registered, please add a new one
+    
   /! ko foreach: days
   .date-reg
     .info
@@ -11,7 +14,7 @@
         .day   data-bind='text: day'
         .month data-bind='text: month'
       .total
-        .panel-heading Calories
+        .panel-heading Total
         .panel-body data-bind='text: total'
     .meals
       /! ko foreach: meals
@@ -27,12 +30,11 @@
       /! /ko
   /! /ko
   
-  = link_to 'New Meal', new_meal_path
-
 
 javascript:
   window.meals_json = #{raw @meals.to_json(except: [:created_at, :updated_at])}
   
 coffee:
-  vm = new MealsApp.MealsIndexViewModel(meals_json)
-  $ -> ko.applyBindings vm, $('.meals-index')[0] 
+  $ -> 
+    vm = new MealsApp.MealsIndexViewModel(meals_json)
+    ko.applyBindings vm, $('.meals-index')[0] 

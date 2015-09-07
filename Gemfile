@@ -53,6 +53,7 @@ group :development, :test do
   gem 'capybara'     
   gem 'capybara-screenshot'        
   gem 'capybara-firebug'
+  gem 'poltergeist'
   gem 'guard-rails'          
   gem 'guard-rspec'   
   gem 'guard-jasmine'       

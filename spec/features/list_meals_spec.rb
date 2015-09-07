@@ -1,35 +1,33 @@
 require 'rails_helper'
 
-feature "Lists all the meals for the current user", js: true do
+feature "Meals Index", js: true, focus: true do
+  
+  let(:meals_page) { MealIndexPage.new }
   
   context 'When meals exists in the database for the current user' do
-    before :each do
+    before do
       FoodDiary.create_days 2
     end
 
-    let(:meals_page) { MealIndexPage.new }
-    
     scenario "Lists all the meals" do
-      byebug
-
       meals_page.open
       
-      byebug
-
-      expected = Meal.totals_by_date
+      expected = MealIndexPage.from_meals Meal.totals_by_date.map
       
       expect(meals_page.meal_list).to eq expected
     end
   end
   
-  # context 'When no meals are available' do
-  #   it 'shows an empty list message' do
-  #     visit '/meals'
-  #
-  #     actual = all('.meal')
-  #
-  #     expect(actual).to be_empty
-  #   end
-  # end
+  context 'When no meals are available' do
+    it 'Shows an empty list message' do
+      meals_page.open
+
+      actual = meals_page.meal_list
+
+      expect(actual).to be_empty
+      
+      expect(meals_page).to have_empty_notice
+    end
+  end
   
 end

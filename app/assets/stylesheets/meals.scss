@@ -6,10 +6,21 @@
 @import 'bootstrap/mixins';
 @import 'bootstrap/alerts';
 @import 'bootstrap/panels';
-@import 'bootstrap/wells';
+@import 'bootstrap/wells' ;
+@import 'bootstrap/alerts' ;
 
 .meals-index {
 
+  .empty-meals {
+    @extend .alert;
+    @extend .alert-warning;
+    margin: 50px auto;
+    text-align: center;
+    width: 70%;
+    .message {
+      @extend h3;
+    }
+  }
   .new-meal {
     float: right;
   }
@@ -25,21 +36,24 @@
       width: 100px;
       text-align: center;
       padding:10px;
-//      background:white;
+
       
       .date { 
         width: 100%;
         text-align:center;
+        border-radius: 5px;
         .day { 
-          border: 1px solid #999;
+          border: 1px solid $gray-dark;
           border-radius: 5px 5px 0 0;
           letter-spacing: 2px;
           padding: 5px;
           background: white;
         }
         .month { 
+          border: 1px solid $gray-dark;
+          border-top: none;
           text-transform: uppercase;
-          background: #999 none repeat scroll 0 0;
+          background: $gray none repeat scroll 0 0;
           border-radius: 0 0 5px 5px;
           color: #fff;
           padding: 5px 10px;  
