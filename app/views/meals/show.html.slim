@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Meal:
+  = @meal.meal
+p
+  strong Logged at:
+  = @meal.logged_at
+p
+  strong Calories:
+  = @meal.calories
+
+= link_to 'Edit', edit_meal_path(@meal)
+'|
+= link_to 'Back', meals_path

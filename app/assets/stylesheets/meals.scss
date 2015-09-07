@@ -1,0 +1,142 @@
+// Place all the styles related to the meals controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import 'bootstrap/variables';
+@import 'bootstrap/mixins';
+@import 'bootstrap/alerts';
+@import 'bootstrap/panels';
+@import 'bootstrap/wells' ;
+@import 'bootstrap/alerts' ;
+
+.meals-index {
+
+  .empty-meals {
+    @extend .alert;
+    @extend .alert-warning;
+    margin: 50px auto;
+    text-align: center;
+    width: 70%;
+    .message {
+      @extend h3;
+    }
+  }
+  .new-meal {
+    float: right;
+  }
+  
+  .date-reg {
+    width: 100%;
+    display: table;
+    @extend .well;
+    padding: 0;
+
+    .info {
+      display: table-cell;
+      width: 100px;
+      text-align: center;
+      padding:10px;
+
+      
+      .date { 
+        width: 100%;
+        text-align:center;
+        border-radius: 5px;
+        .day { 
+          border: 1px solid $gray-dark;
+          border-radius: 5px 5px 0 0;
+          letter-spacing: 2px;
+          padding: 5px;
+          background: white;
+        }
+        .month { 
+          border: 1px solid $gray-dark;
+          border-top: none;
+          text-transform: uppercase;
+          background: $gray none repeat scroll 0 0;
+          border-radius: 0 0 5px 5px;
+          color: #fff;
+          padding: 5px 10px;  
+          font-size: .8em;    
+        }
+      }
+      .total {
+        @extend .panel;
+        @extend .panel-info;
+        margin-top: 10px;
+        margin-bottom: 0px;
+        text-align: center;
+        font-size: 1.5em;
+        width: 100%;
+        
+        .panel-heading {
+          font-size: .6em;
+          padding: 5px 0px;
+        }
+        
+        .panel-body {
+          padding: 5px 0px;
+          font-size: .8em;
+        }
+      }
+    }
+    
+    .meals {
+      display: table-cell;
+      padding-right: 15px;
+      vertical-align: top;
+      padding-top: 10px;
+      
+      .meal-reg {
+        display:table ;
+        width: 100%;
+        margin-bottom: 10px;
+        
+        .time, .meal, .calories, .tools {
+          display:table-cell;
+          background: white;
+          height: 30px;
+          vertical-align: middle;
+        }
+        &:nth-child(even) {
+          .time, .meal, .calories, .tools { 
+            background-color: #2c3e50; 
+            color: white;
+          }
+        }
+        
+        .time {
+          width: 80px;
+          padding-left: 15px;
+          border-radius: 5px 0 0 5px;
+        }
+        
+        .tools {
+          border-radius: 0 5px 5px 0;
+          width: 80px;
+          text-align:right;
+          padding-right: 10px;
+          
+          .btn { display: none;}
+        }
+        
+        &:hover {
+          .btn { display: inline-block;}
+        };
+
+        .calories {
+          width: 50px;
+          text-align: right;
+          padding-right: 25px;
+          white-space: nowrap;
+          &:after {
+            content: ' cal.'
+          }
+        }  
+      }
+  
+    }
+  }
+  
+  
+}

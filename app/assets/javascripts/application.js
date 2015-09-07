@@ -16,5 +16,10 @@
 //= require turbolinks
 //= require knockout
 //= require knockout.mapping
-//= require_tree .
+//= require moment
+//= require meals_app
+//= require meals
 
+  
+
+  

@@ -1,0 +1,40 @@
+.meals-index
+  h1 
+    span My meals
+    .btn.btn-default.new-meal
+      .fa.fa-plus data-title='Add a new one'
+
+  .empty-meals data-bind='visible: days.length == 0'
+    .message No entries are registered, please add a new one
+    
+  /! ko foreach: days
+  .date-reg
+    .info
+      .date 
+        .day   data-bind='text: day'
+        .month data-bind='text: month'
+      .total
+        .panel-heading Total
+        .panel-body data-bind='text: total'
+    .meals
+      /! ko foreach: meals
+      .meal-reg
+        .time     data-bind='text: time'
+        .calories data-bind='text: calories'
+        .meal     data-bind='text: meal'
+        .tools
+          .btn.btn-default.btn-xs
+            .fa.fa-pencil data-title='Edit'
+          .btn.btn-default.btn-xs
+            .fa.fa-remove data-title='Delete'
+      /! /ko
+  /! /ko
+  
+
+javascript:
+  window.meals_json = #{raw @meals.to_json(except: [:created_at, :updated_at])}
+  
+coffee:
+  $ -> 
+    vm = new MealsApp.MealsIndexViewModel(meals_json)
+    ko.applyBindings vm, $('.meals-index')[0] 
