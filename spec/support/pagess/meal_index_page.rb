@@ -14,7 +14,11 @@ class MealIndexPage
     all('.date-reg').map { |n| DayMealsPart.parse n }
   end
 
+  def create_meal(meal)
+  end
+  
   def has_empty_notice?
+    has_css? '.message'
   end
   
   def self.from_meals(days)
