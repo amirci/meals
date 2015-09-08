@@ -1,1 +1,2 @@
-json.extract! @meal, :id, :meal, :logged_at, :calories, :created_at, :updated_at
+json.(@meal, :id, :meal, :calories, :logged_at)
+

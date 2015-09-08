@@ -6,7 +6,7 @@ class MealsApp.Meal
     nop = ->
 
     $.ajax(
-      url: Routes.new_meal_path(format: 'json')
+      url: '/api/v1/meals.json'
       data: meal
       type: 'POST'
     ).success(options.done || nop).fail(options.error || nop).always(options.complete || nop)

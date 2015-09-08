@@ -14,18 +14,16 @@
         input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm'
       .form-group
         label Time
-        select.form-control.hours name='meal_hours' type='text'
-          = options_for_select((0..24).map { |i| sprintf '%02d', i })
+        select.form-control.hours name='meal_hours' type='text' data-bind="options: hours_vm, value: hour"
         label.sep= ':'
-        select.form-control.min name='meal_minutes' type='text'
-          = options_for_select(12.times.map { |i| sprintf '%02d', i * 5 })
+        select.form-control.min name='meal_minutes' type='text' data-bind='options: minutes_vm, value: minutes'
       .form-group
         label Calories
         input.form-control.calories name='meal_calories' type='number' data-bind='value: calories'
     form.form-inline
       .form-group
         label Meal
-        input.form-control.meal name='meal_meal' type='text'
+        input.form-control.meal name='meal_meal' type='text' data-bind='value: meal'
     .buttons data-bind='visible: ! saving()'
       button.save   data-bind='click: save'   Save
       button.cancel data-bind='click: cancel' Cancel

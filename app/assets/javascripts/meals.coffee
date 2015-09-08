@@ -1,4 +1,17 @@
-
+if (typeof String::lpad != 'function')
+  String::lpad = (padString, length) ->
+    str = this
+    while str.length < length
+      str = padString + str
+    return str
+ 
+if (typeof String::rpad != 'function')
+  String::rpad = (padString, length) ->
+    str = this
+    while str.length < length
+      str = str + padString
+    return str
+    
 class MealsApp.MealsIndexViewModel
   
   constructor: (meals) ->
@@ -13,10 +26,13 @@ class MealEditor
     @active   = ko.observable false
     @date     = ko.observable moment()
     @calories = ko.observable 0
-    @hours    = ko.observable 0
+    @hour     = ko.observable 0
     @minutes  = ko.observable 0
-    @meal     = ko.observable
+    @meal     = ko.observable ''
     @saving   = ko.observable false
+    
+    @hours_vm = ("#{h}".lpad(0, 2) for h in [0..23])
+    @minutes_vm = ("#{m * 5}".lpad(0, 2) for m in [0..11])
     @date_vm  = ko.pureComputed
       read: => @date().format('MMM D, YYYY')
       write: (value) => @date moment(value, 'MMM D, YYYY')
@@ -26,8 +42,7 @@ class MealEditor
   save: =>
     @saving true
     meal =
-      date: @date().format('YYYY-MM-DD')
-      time: "#{@hours()}:#{@minutes()}"
+      logged_at: @date().format('YYYY-MM-DD') + " #{@hour()}:#{@minutes()}"
       calories: @calories()
       meal: @meal()
 

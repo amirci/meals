@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   resources :meals, only: [:index]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -6,9 +7,9 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-  scope :api do
-    scope :v1 do
-      resources :meals, controller: 'meals'
+  scope :api, as: 'api' do
+    scope :v1, as: 'v1' do
+      resources :meals, defaults: {format: :json}, only: [:index, :create, :update, :destroy], controller: :meals
     end
   end
   

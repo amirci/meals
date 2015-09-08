@@ -33,9 +33,7 @@ RSpec.describe MealsController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    before do
-      FoodDiary.create_days 1
-    end
+    before  {FoodDiary.create_days 1}
     it "assigns all meals grouped by date @meals" do
       meals = Meal.totals_by_date
       get :index, {}, valid_session
@@ -51,13 +49,6 @@ RSpec.describe MealsController, type: :controller do
   #   end
   # end
   #
-  # describe "GET #new" do
-  #   it "assigns a new meal as @meal" do
-  #     get :new, {}, valid_session
-  #     expect(assigns(:meal)).to be_a_new(Meal)
-  #   end
-  # end
-  #
   # describe "GET #edit" do
   #   it "assigns the requested meal as @meal" do
   #     meal = Meal.create! valid_attributes
@@ -66,38 +57,6 @@ RSpec.describe MealsController, type: :controller do
   #   end
   # end
   #
-  # describe "POST #create" do
-  #   context "with valid params" do
-  #     it "creates a new Meal" do
-  #       expect {
-  #         post :create, {:meal => valid_attributes}, valid_session
-  #       }.to change(Meal, :count).by(1)
-  #     end
-  #
-  #     it "assigns a newly created meal as @meal" do
-  #       post :create, {:meal => valid_attributes}, valid_session
-  #       expect(assigns(:meal)).to be_a(Meal)
-  #       expect(assigns(:meal)).to be_persisted
-  #     end
-  #
-  #     it "redirects to the created meal" do
-  #       post :create, {:meal => valid_attributes}, valid_session
-  #       expect(response).to redirect_to(Meal.last)
-  #     end
-  #   end
-  #
-  #   context "with invalid params" do
-  #     it "assigns a newly created but unsaved meal as @meal" do
-  #       post :create, {:meal => invalid_attributes}, valid_session
-  #       expect(assigns(:meal)).to be_a_new(Meal)
-  #     end
-  #
-  #     it "re-renders the 'new' template" do
-  #       post :create, {:meal => invalid_attributes}, valid_session
-  #       expect(response).to render_template("new")
-  #     end
-  #   end
-  # end
   #
   # describe "PUT #update" do
   #   context "with valid params" do
