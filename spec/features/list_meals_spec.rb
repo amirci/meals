@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature "Meals Index", js: true, focus: true do
+feature "Meals Index", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
@@ -12,7 +12,7 @@ feature "Meals Index", js: true, focus: true do
     scenario "Lists all the meals" do
       meals_page.open
       
-      expected = MealIndexPage.from_meals Meal.totals_by_date.map
+      expected = MealIndexPage.from_meals Meal.totals_by_date
       
       expect(meals_page.meal_list).to eq expected
     end

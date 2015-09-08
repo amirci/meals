@@ -7,5 +7,9 @@ RSpec.describe MealsController, type: :routing do
       expect(:get => "/meals").to route_to("meals#index")
     end
 
+    it "routes to #create" do
+      expect(post: "/api/v1/meals").to route_to(format: :json, controller: 'meals', action: 'create')
+    end
+
   end
 end
