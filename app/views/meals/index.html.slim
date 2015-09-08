@@ -1,11 +1,39 @@
 .meals-index
   h1 
     span My meals
-    .btn.btn-default.new-meal
-      .fa.fa-plus data-title='Add a new one'
+    button.new-meal data-bind='click: newMeal' data-title='Add a new one'
+      = fa_icon 'plus'
 
   .empty-meals data-bind='visible: days.length == 0'
-    .message No entries are registered, please add a new one
+    .message No entries available, please add a new one
+
+  .new-meal-form data-bind='with: editor, slideVisible: editor.active'
+    form.form-inline
+      .form-group
+        label for='date' Date
+        input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm'
+      .form-group
+        label Time
+        select.form-control.hours name='meal_hours' type='text'
+          = options_for_select((0..24).map { |i| sprintf '%02d', i })
+        label.sep= ':'
+        select.form-control.min name='meal_minutes' type='text'
+          = options_for_select(12.times.map { |i| sprintf '%02d', i * 5 })
+      .form-group
+        label Calories
+        input.form-control.calories name='meal_calories' type='number' data-bind='value: calories'
+    form.form-inline
+      .form-group
+        label Meal
+        input.form-control.meal name='meal_meal' type='text'
+    .buttons data-bind='visible: ! saving()'
+      button.save   data-bind='click: save'   Save
+      button.cancel data-bind='click: cancel' Cancel
+    .buttons data-bind='visible: saving'
+      .alert.alert-warning 
+        span Saving please wait...
+        = fa_icon 'cog', class: 'fa-spin'
+        
     
   /! ko foreach: days
   .date-reg
@@ -38,3 +66,10 @@ coffee:
   $ -> 
     vm = new MealsApp.MealsIndexViewModel(meals_json)
     ko.applyBindings vm, $('.meals-index')[0] 
+    
+    $("input.date_picker:not([readonly])").datepicker({
+      format: 'M d, yyyy',
+      weekStart: 1,
+      todayBtn: "linked",
+      todayHighlight: true
+    })    

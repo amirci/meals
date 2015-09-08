@@ -28,6 +28,10 @@ gem 'slim-rails'
 gem 'knockoutjs-rails'
 gem "font-awesome-rails"
 gem 'momentjs-rails'
+gem 'simple_form'
+gem 'bootstrap-datepicker-rails'
+gem 'js-routes'
+gem 'pnotify-rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

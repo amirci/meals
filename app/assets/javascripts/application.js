@@ -16,9 +16,14 @@
 //= require turbolinks
 //= require knockout
 //= require knockout.mapping
+//= require bootstrap-datepicker  
 //= require moment
+//= require js-routes
+//= require pnotify  
+//= require handlers
 //= require meals_app
 //= require meals
+//= require meal
 
   
 

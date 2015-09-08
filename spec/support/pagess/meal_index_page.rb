@@ -15,6 +15,13 @@ class MealIndexPage
   end
 
   def create_meal(meal)
+    find('.new-meal').click
+    fill_in 'meal_date', with: meal.logged_at.strftime('%b %d, %Y')
+    select meal.logged_at.strftime('%H'), from: 'meal_hours'
+    select meal.logged_at.strftime('%M'), from: 'meal_minutes'
+    fill_in 'meal_calories', with: meal.calories
+    fill_in 'meal_meal', with: meal.meal
+    find('.new-meal-form .save').click
   end
   
   def has_empty_notice?
