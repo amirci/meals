@@ -16,23 +16,27 @@ feature "Adding meals", js: true, focus: true do
   
   let!(:old_meals) { create_list :lunch, 2 }
   
-  let(:new_meal)   { build :supper, date: Date.tomorrow, meal: 'Chicken with dumplings', calories: 2000 }
+  let(:new_meal)   { build :supper, logged_at: Date.tomorrow, meal: 'Chicken with dumplings', calories: 2000 }
   
   before do
     meals_page.open
   end
-
+  
   context 'Adding a new meal' do
     before { meals_page.create_meal new_meal }
     
-    it "shows the meal on page" do
+    it "shows the new meal on page" do
       expected = MealIndexPage.from_meals Meal.totals_by_date
-      expect(meals_page.meal_list).to eq expected
+      eventually {
+        expect(meals_page.meal_list).to eq expected
+      }
     end
     
-    it 'adds the meal to the database' do
-      expect(Meal.all).to match_attributes(old_meals + [new_meal])
+    it "Adds the new meal" do
+      expect(Meal.all.count).to eq 3
+      expect(Meal.last.meal).to eq new_meal.meal
     end
+    
   end
   
   # context 'Adding a meal but cancelling' do

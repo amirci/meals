@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'meals#index'
 
   scope :api, as: 'api' do
     scope :v1, as: 'v1' do

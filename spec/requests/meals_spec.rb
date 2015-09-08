@@ -38,7 +38,7 @@ RSpec.describe "Meals API", type: :request do
     
     context 'When parameters are valid' do
       it 'creates a new meal for the current user' do
-        post '/api/v1/meals', format: :json, meal: new_meal
+        post '/api/v1/meals', :format => :json, meal: new_meal
         expect(response).to have_http_status(201)
         expect(response.body).to eq expected
       end

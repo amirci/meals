@@ -10,6 +10,7 @@ class Meal < ActiveRecord::Base
       .map do |date, meals|
         DayMeals.new(date, meals.sum(&:calories), meals.sort_by(&:logged_at))
       end
+      .sort { |a, b| b.date <=> a.date }
   end
   
 end

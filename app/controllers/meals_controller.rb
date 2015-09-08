@@ -1,5 +1,6 @@
 class MealsController < ApplicationController
   before_action :set_meal, only: [:update, :destroy]
+#  respond_to :json
 
   # GET /meals
   # GET /meals.json
@@ -12,7 +13,7 @@ class MealsController < ApplicationController
     @meal = Meal.new(meal_params)
 
     if @meal.save
-      render :show, status: :created, location: @meal
+      render :show, status: :created, location: api_v1_meal_url(@meal)
     else
       render json: @meal.errors, status: :unprocessable_entity
     end

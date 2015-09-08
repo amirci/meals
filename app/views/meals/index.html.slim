@@ -4,7 +4,7 @@
     button.new-meal data-bind='click: newMeal' data-title='Add a new one'
       = fa_icon 'plus'
 
-  .empty-meals data-bind='visible: days.length == 0'
+  .empty-meals data-bind='visible: days().length == 0'
     .message No entries available, please add a new one
 
   .new-meal-form data-bind='with: editor, slideVisible: editor.active'
