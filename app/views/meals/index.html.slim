@@ -52,7 +52,7 @@
         .panel-body data-bind='text: total'
     .meals
       /! ko foreach: meals
-      .meal-reg
+      .meal-reg data-bind="attr: {'data-id': id}"
         .time     data-bind='text: time'
         .calories data-bind='text: calories'
         .meal     data-bind='text: meal'

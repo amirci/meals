@@ -19,38 +19,56 @@ RSpec.describe "Meals API", type: :request do
   end
   
   describe "GET /api/v1/meals" do
-    before do
-      FoodDiary.create_days 1
-    end
+    before {FoodDiary.create_days 1}
     
     it "Returns all the meals for the current user" do
       get '/api/v1/meals', format: :json
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(:ok)
       expect(response.body).to eq expected
     end
   end
 
+  describe 'PUT /api/v1/meals/:id' do
+    let!(:meal)    { create :lunch, meal: 'Shrimp & lobster' }
+    let(:new_meal) { attributes_for(:supper) }
+    let(:expected) { JSON.parse({'id' => meal.id}.merge(new_meal).to_json) }
+    
+    context 'When parameters are valid' do
+      it 'Updates the meal with new values' do
+        put "/api/v1/meals/#{meal.id}", :format => :json, meal: new_meal
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse response.body).to eq expected
+      end
+    end
+    
+    context 'When parameters are valid' do
+      let(:invalid_meal) { attributes_for :invalid_meal }
+      it 'Updates the meal with new values' do
+        put "/api/v1/meals/#{meal.id}", :format => :json, meal: invalid_meal
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+  end
+  
   describe 'POST /api/v1/meals' do
-    let(:new_meal) { 
-      {'meal' => 'cheese', 'calories' => 1200, 'logged_at' => '2015-09-01T12:30:00.000-05:00'}
-    }
-    let(:expected) { {'id' => 1}.merge(new_meal).to_json }
+    let(:new_meal) { attributes_for :lunch }
+    let(:expected) { JSON.parse({'id' => 1}.merge(new_meal).to_json) }
     
     context 'When parameters are valid' do
       it 'creates a new meal for the current user' do
         post '/api/v1/meals', :format => :json, meal: new_meal
-        expect(response).to have_http_status(201)
-        expect(response.body).to eq expected
+        expect(response).to have_http_status(:created)
+        expect(JSON.parse response.body).to eq expected
       end
     end
     
     context 'When parameters are invalid' do
-      let(:invalid_meal) { 
-        {'meal' => '', 'calories' => 1200, 'logged_at' => '2015-09-01T12:30:00.000-05:00'}
-      }
+      let(:invalid_meal) { attributes_for :invalid_meal }
+
       it 'Returns an error' do
         post '/api/v1/meals', format: :json, meal: invalid_meal
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
     

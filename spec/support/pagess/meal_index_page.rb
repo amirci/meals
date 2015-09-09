@@ -21,7 +21,7 @@ class MealIndexPage
     select meal.logged_at.strftime('%M'), from: 'meal_minutes'
     fill_in 'meal_calories', with: meal.calories
     fill_in 'meal_meal', with: meal.meal
-    find('.new-meal-form .save').click
+    find('.new-meal-form .save').trigger('click')
   end
   
   def has_empty_notice?

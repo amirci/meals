@@ -12,7 +12,7 @@ describe 'MealsApp.MealsIndexViewModel', ->
         ]
         
         vm = new MealsApp.MealsIndexViewModel days
-        meal = new MealsApp.Meal('2015-07-22 08:30', 'Steak', 1000)
+        meal = new MealsApp.Meal(1, '2015-07-22 08:30', 'Steak', 1000)
 
         vm.insertMeal meal
 
@@ -20,9 +20,9 @@ describe 'MealsApp.MealsIndexViewModel', ->
 
         day = vm.days()[0]
         expect(day.day).toBe 'Jul 22'
-        expect(day.total).toBe 3200
+        expect(day.total()).toBe 3200
         expect(day.meals().length).toBe 2
-        expect(day.meals()[0].meal).toBe 'Steak'
+        expect(day.meals()[0].meal()).toBe 'Steak'
 
     describe 'When the date does not exist', ->
 
@@ -33,7 +33,7 @@ describe 'MealsApp.MealsIndexViewModel', ->
         ]
         
         vm = new MealsApp.MealsIndexViewModel days
-        meal = new MealsApp.Meal('2015-07-21 08:30', 'Steak', 1000)
+        meal = new MealsApp.Meal(1, '2015-07-21 08:30', 'Steak', 1000)
 
         vm.insertMeal meal
 
@@ -43,7 +43,7 @@ describe 'MealsApp.MealsIndexViewModel', ->
         expect(day.day).toBe 'Jul 21'
         expect(day.month).toBe '2015'
         expect(day.meals().length).toBe 1
-        expect(day.total).toBe 1000
+        expect(day.total()).toBe 1000
         
   describe '#constructor', ->
     it 'creates all the meals per day', ->
@@ -64,14 +64,14 @@ describe 'MealsApp.MealsIndexViewModel', ->
       dayVm = index.days()[0]
       expect(dayVm.day).toBe('Jul 20')
       expect(dayVm.month).toBe('2015')
-      expect(dayVm.total).toBe(2200)
+      expect(dayVm.total()).toBe(2200)
 
       actual = dayVm.meals()
       expect(actual.length).toBe(4)
     
       compareMeal = (actualMeal, meal) ->
-        expect(actualMeal.calories).toBe meal.calories
-        expect(actualMeal.meal).toBe     meal.meal
-        expect(actualMeal.time).toBe     moment(meal.logged_at).format('HH:mm')
+        expect(actualMeal.calories()).toBe meal.calories
+        expect(actualMeal.meal()).toBe     meal.meal
+        expect(actualMeal.time()).toBe     moment(meal.logged_at).format('HH:mm')
       
       (compareMeal actual[i], m for m, i in meals)

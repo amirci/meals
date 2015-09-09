@@ -23,6 +23,8 @@ class MealEditor
     @saving   = ko.observable false
 
     @title    = ko.observable 'New Meal'
+    
+    @id       = ko.observable -1
     @date     = ko.observable moment()
     @calories = ko.observable()
     @hour     = ko.observable()
@@ -38,24 +40,26 @@ class MealEditor
       read: => @date().format('MMM D, YYYY')
       write: (value) => @date moment(value, 'MMM D, YYYY')
   
-  load: (meal={}) =>
-    @date     meal.moment || moment()
-    @calories meal.calories || 0
-    @hour     @date().format('HH')
-    @minutes  @date().format('mm')
-    @meal     meal.meal || ''
-    
   open: (saveMeal, current={}) =>
+    @saving false
     @saveMeal = saveMeal
     @load current
     $(".new-meal-form").modal()    
+
+  load: (meal={}) =>
+    @id       meal.id
+    @date     meal.moment?() || moment()
+    @calories meal.calories?() || 0
+    @hour     @date().format('HH')
+    @minutes  @date().format('mm')
+    @meal     meal.meal?() || ''
 
   cancel: -> 
     $(".new-meal-form").modal('hide')
   
   createMeal: =>
     date = @date().format('YYYY-MM-DD') + " #{@hour()}:#{@minutes()}"
-    new MealsApp.Meal date, @meal(), @calories()
+    new MealsApp.Meal @id(), date, @meal(), @calories()
 
   save: =>
     @saving true
@@ -112,8 +116,8 @@ class DayMealsViewModel
     @date   = @moment.format('YYYY-MM-DD')
     @day    = @moment.format('MMM D')
     @month  = @moment.format('YYYY')
-    @total  = m.calories
-    @meals  = ko.observableArray(new MealViewModel(meal) for meal in m.meals)
+    @total  = ko.observable m.calories
+    @meals  = ko.observableArray(new MealViewModel(meal, @total) for meal in m.meals)
 
   addMeal: (m) ->
     key = m.moment.format('HH:mm')
@@ -121,20 +125,33 @@ class DayMealsViewModel
     index = if bigger?.length then bigger[0] else @meals().length
 
     @meals.splice index, 0, new MealViewModel(m)
-    @total += m.calories
+    @total @total() + m.calories
     
+
 class MealViewModel
   
-  constructor: (m) ->
-    @moment   = moment(m.logged_at)
-    @calories = m.calories
-    @time     = @moment.format('HH:mm')
-    @meal     = m.meal
+  constructor: (m, @total) ->
+    @id       = m.id
+    @moment   = ko.observable moment(m.logged_at)
+    @calories = ko.observable m.calories
+    @time     = ko.pureComputed => @moment().format('HH:mm')
+    @meal     = ko.observable m.meal
     @editor   = MealEditor.create()
     
   edit: =>
     @editor.open(@update, @)
   
   update: (meal, options) =>
+    options.success = [options.success, => @updateMeal meal]
+    MealsApp.Meal.update meal, options
+    
+  updateMeal: (m) =>
+    @total @total() + m.calories - @calories()
+    @moment   m.moment
+    @calories m.calories
+    @meal     m.meal
+    
+    $("[data-id='#{@id}'] div").effect('highlight', {}, 5000)
+    
     
   remove: => alert 'are you sure?'

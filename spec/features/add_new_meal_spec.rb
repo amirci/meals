@@ -29,12 +29,9 @@ feature "Adding meals", js: true, focus: true do
       expected = MealIndexPage.from_meals Meal.totals_by_date
       eventually {
         expect(meals_page.meal_list).to eq expected
+        expect(Meal.all.count).to eq 3
+        expect(Meal.last.meal).to eq new_meal.meal
       }
-    end
-    
-    it "Adds the new meal" do
-      expect(Meal.all.count).to eq 3
-      expect(Meal.last.meal).to eq new_meal.meal
     end
     
   end
