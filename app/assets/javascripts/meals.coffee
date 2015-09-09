@@ -16,10 +16,19 @@ class MealsApp.MealsIndexViewModel
   
   constructor: (meals) ->
     @days = ko.observableArray(new DayMealsViewModel(m) for m in meals)
-    @editor = new MealEditor(@insertMeal)
+    @editor = new MealEditor(@save)
     
-  newMeal: -> @editor.active true
-  
+  newMeal: -> @editor.open()
+    
+  save: (meal, options) =>
+    success = options.success
+    
+    options.success = =>
+      success()
+      @insertMeal meal
+      
+    MealsApp.Meal.save meal, options
+    
   insertMeal: (meal) =>
     key = meal.moment.format('YYYY-MM-DD')
     bigger = ([d, i] for d, i in @days() when d.date <= key)
@@ -35,7 +44,7 @@ class MealsApp.MealsIndexViewModel
 class MealEditor
   
   constructor: (@insertMeal) ->
-    @active   = ko.observable false
+    @title    = 'New Meal'
     @date     = ko.observable moment()
     @calories = ko.observable 0
     @hour     = ko.observable 0
@@ -49,7 +58,11 @@ class MealEditor
       read: => @date().format('MMM D, YYYY')
       write: (value) => @date moment(value, 'MMM D, YYYY')
     
-  cancel: -> @active false
+  open: ->
+    $(".new-meal-form").modal()    
+
+  cancel: -> 
+    $(".new-meal-form").modal('hide')
   
   createMeal: =>
     date = @date().format('YYYY-MM-DD') + " #{@hour()}:#{@minutes()}"
@@ -63,13 +76,14 @@ class MealEditor
     options =
       success: => 
         new PNotify(title: 'Saving new meal', text: 'The meal was saved!', type: 'success')
-        @insertMeal meal
-        @active false
+        @cancel()
+        
       error: -> 
         new PNotify(title: 'Saving new meal', text: 'Sorry an error occured', type: 'error')
+
       complete: => @saving false
       
-    MealsApp.Meal.save meal, options
+    @insertMeal meal, options
       
     
   
