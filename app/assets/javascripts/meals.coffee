@@ -12,53 +12,42 @@ if (typeof String::rpad != 'function')
       str = str + padString
     return str
     
-class MealsApp.MealsIndexViewModel
-  
-  constructor: (meals) ->
-    @days = ko.observableArray(new DayMealsViewModel(m) for m in meals)
-    @editor = new MealEditor(@save)
-    
-  newMeal: -> @editor.open()
-    
-  save: (meal, options) =>
-    success = options.success
-    
-    options.success = =>
-      success()
-      @insertMeal meal
-      
-    MealsApp.Meal.save meal, options
-    
-  insertMeal: (meal) =>
-    key = meal.moment.format('YYYY-MM-DD')
-    bigger = ([d, i] for d, i in @days() when d.date <= key)
-
-    [found, index] = if bigger?.length then bigger[0] else [null, @days().length]
-
-    unless found?.date == key
-      found = new DayMealsViewModel(date: meal.date, calories: 0, meals: [])
-      @days.splice(index, 0, found)
-
-    found.addMeal(meal)
-    
 class MealEditor
   
-  constructor: (@insertMeal) ->
-    @title    = 'New Meal'
-    @date     = ko.observable moment()
-    @calories = ko.observable 0
-    @hour     = ko.observable 0
-    @minutes  = ko.observable 0
-    @meal     = ko.observable ''
-    @saving   = ko.observable false
+  instance = null
+  
+  @create: ->
+    instance ?= new MealEditor()
     
-    @hours_vm = ("#{h}".lpad(0, 2) for h in [0..23])
+  constructor: ->
+    @saving   = ko.observable false
+
+    @title    = ko.observable 'New Meal'
+    @date     = ko.observable moment()
+    @calories = ko.observable()
+    @hour     = ko.observable()
+    @minutes  = ko.observable()
+    @meal     = ko.observable()
+    
+    @cal_vm     = ko.pureComputed
+      read: => @calories()
+      write: (value) => @calories parseInt(value)
+    @hours_vm   = ("#{h}".lpad(0, 2) for h in [0..23])
     @minutes_vm = ("#{m * 5}".lpad(0, 2) for m in [0..11])
-    @date_vm  = ko.pureComputed
+    @date_vm    = ko.pureComputed
       read: => @date().format('MMM D, YYYY')
       write: (value) => @date moment(value, 'MMM D, YYYY')
+  
+  load: (meal={}) =>
+    @date     meal.moment || moment()
+    @calories meal.calories || 0
+    @hour     @date().format('HH')
+    @minutes  @date().format('mm')
+    @meal     meal.meal || ''
     
-  open: ->
+  open: (saveMeal, current={}) =>
+    @saveMeal = saveMeal
+    @load current
     $(".new-meal-form").modal()    
 
   cancel: -> 
@@ -83,10 +72,39 @@ class MealEditor
 
       complete: => @saving false
       
-    @insertMeal meal, options
+    @saveMeal meal, options
       
-    
   
+class MealsApp.MealsIndexViewModel
+  
+  constructor: (meals) ->
+    @days = ko.observableArray(new DayMealsViewModel(m) for m in meals)
+    @editor = MealEditor.create()
+    
+  newMeal: => 
+    @editor.open(@save)
+    
+  save: (meal, options) =>
+    success = options.success
+    
+    options.success = =>
+      success()
+      @insertMeal meal
+      
+    MealsApp.Meal.save meal, options
+    
+  insertMeal: (meal) =>
+    key = meal.moment.format('YYYY-MM-DD')
+    bigger = ([d, i] for d, i in @days() when d.date <= key)
+
+    [found, index] = if bigger?.length then bigger[0] else [null, @days().length]
+
+    unless found?.date == key
+      found = new DayMealsViewModel(date: meal.date, calories: 0, meals: [])
+      @days.splice(index, 0, found)
+
+    found.addMeal(meal)
+    
 class DayMealsViewModel
   
   constructor: (m) ->
@@ -108,6 +126,15 @@ class DayMealsViewModel
 class MealViewModel
   
   constructor: (m) ->
+    @moment   = moment(m.logged_at)
     @calories = m.calories
-    @time     = moment(m.logged_at).format('HH:mm')
+    @time     = @moment.format('HH:mm')
     @meal     = m.meal
+    @editor   = MealEditor.create()
+    
+  edit: =>
+    @editor.open(@update, @)
+  
+  update: (meal, options) =>
+    
+  remove: => alert 'are you sure?'
