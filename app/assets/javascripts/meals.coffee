@@ -123,6 +123,21 @@ class DayMealsViewModel
     @meals.splice index, 0, new MealViewModel(m, @total)
     @total @total() + m.calories
     
+  remove: (meal) =>
+    if confirm("Are you sure you want to remove -- #{meal.meal()} -- ?")
+      MealsApp.Meal.remove meal.id, 
+        success: => @removeMeal meal
+        error: -> new PNotify(title: 'Removing meal', text: 'Sorry an error occured', type: 'error')
+        
+  removeMeal: (meal) =>
+    index = @meals.indexOf meal
+    @total @total() - meal.calories()
+    @meals.splice index, 1
+
+  hideMeal: (elem) =>
+    if elem.nodeType == 1
+      elem = if @total() == 0 then $(elem).closest('.date-reg') else $(elem).find('div')
+      elem.fadeOut 1000, -> elem.remove
 
 class MealViewModel
   
@@ -133,6 +148,7 @@ class MealViewModel
     @time     = ko.pureComputed => @moment().format('HH:mm')
     @meal     = ko.observable m.meal
     @editor   = MealEditor.create()
+    @confirm  = ko.observable false
     
   edit: =>
     @editor.open(@update, @)
@@ -150,4 +166,3 @@ class MealViewModel
     $("[data-id='#{@id}'] div").effect('highlight', {}, 5000)
     
     
-  remove: => alert 'are you sure?'

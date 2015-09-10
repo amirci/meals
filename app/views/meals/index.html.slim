@@ -7,40 +7,8 @@
   .empty-meals data-bind='visible: days().length == 0'
     .message No entries available, please add a new one
 
-  .new-meal-form.modal.fade role='dialog' data-bind='with: editor'
-    .modal-dialog role='document'
-      .modal-content
-        .modal-header
-          .title data-bind='text:title'
-        .modal-body
-          form.form-horizontal
-            .form-group
-              label.col-xs-2 for='date' Date
-              .col-xs-3
-                input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm'
-              label.col-xs-1 Time
-              .col-xs-4
-                select.form-control.hours name='meal_hours' type='text' data-bind="options: hours_vm, value: hour"
-                span.sep= ':'
-                select.form-control.min name='meal_minutes' type='text' data-bind='options: minutes_vm, value: minutes'
-            .form-group
-              label.col-xs-2 Calories
-              .col-xs-4
-                input.form-control.calories name='meal_calories' type='number' data-bind='value: cal_vm'
-            .form-group
-              label.col-xs-2 Meal
-              .col-xs-8
-                input.form-control.meal name='meal_meal' type='text' data-bind='value: meal'
-        .modal-footer
-          .buttons data-bind='visible: ! saving()'
-            button.save   data-bind='click: save'   Save
-            button.cancel data-bind='click: cancel' Cancel
-          .buttons data-bind='visible: saving'
-            .alert.alert-warning 
-              span Saving please wait...
-              = fa_icon 'cog', class: 'fa-spin'
-        
-    
+  = render partial: 'form'
+
   /! ko foreach: days
   .date-reg
     .info
@@ -49,18 +17,18 @@
         .month data-bind='text: month'
       .total
         .panel-heading Total
-        .panel-body data-bind='text: total'
+        .panel-body data-bind='text: total() + " Cal."'
     .meals
-      /! ko foreach: meals
+      /! ko foreach: {data: meals, beforeRemove: hideMeal}
       .meal-reg data-bind="attr: {'data-id': id}"
         .time     data-bind='text: time'
         .calories data-bind='text: calories'
         .meal     data-bind='text: meal'
-        .tools
+        .tools 
           button.edit data-bind="click: edit"
-            .fa.fa-pencil data-title='Edit' 
-          button.delete data-bind="click: remove"
-            .fa.fa-trash data-title='Delete'
+            = fa_icon 'pencil', :'data-title' => 'Edit' 
+          button.delete data-bind="click: $parent.remove"
+            = fa_icon 'trash', :'data-title' => 'Delete'
       /! /ko
   /! /ko
   

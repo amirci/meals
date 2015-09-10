@@ -1,5 +1,5 @@
 require 'capybara/poltergeist'
-Capybara.javascript_driver = :poltergeist
+Capybara.javascript_driver = :selenium
 
 # Capybara.register_driver :selenium do |app|
 #   Capybara::Driver::Selenium
@@ -32,4 +32,14 @@ end
 
 RSpec.configure do |config|
   config.include AsyncHelper
+  
+  config.before(:each) do |example|
+    if example.metadata[:selenium]
+      Capybara.javascript_driver = :selenium
+    end
+  end
+
+  config.after(:each) do |group|
+    Capybara.javascript_driver = :poltergeist
+  end
 end

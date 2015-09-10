@@ -1,18 +1,34 @@
-= form_for @meal do |f|
-  - if @meal.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@meal.errors.count, "error")} prohibited this meal from being saved:"
-      ul
-        - @meal.errors.full_messages.each do |message|
-          li = message
-
-  .field
-    = f.label :meal
-    = f.text_field :meal
-  .field
-    = f.label :logged_at
-    = f.datetime_select :logged_at
-  .field
-    = f.label :calories
-    = f.text_field :calories
-  .actions = f.submit
+.new-meal-form.modal.fade role='dialog' data-bind='with: editor'
+  .modal-dialog role='document'
+    .modal-content
+      .modal-header
+        .title data-bind='text:title'
+      .modal-body
+        form.form-horizontal
+          .form-group
+            label.col-xs-2 for='date' Date
+            .col-xs-3
+              input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm'
+            label.col-xs-1 Time
+            .col-xs-4
+              select.form-control.hours name='meal_hours' type='text' data-bind="options: hours_vm, value: hour"
+              span.sep= ':'
+              select.form-control.min name='meal_minutes' type='text' data-bind='options: minutes_vm, value: minutes'
+          .form-group
+            label.col-xs-2 Calories
+            .col-xs-4
+              input.form-control.calories name='meal_calories' type='number' data-bind='value: cal_vm'
+          .form-group
+            label.col-xs-2 Meal
+            .col-xs-8
+              input.form-control.meal name='meal_meal' type='text' data-bind='value: meal'
+      .modal-footer
+        .buttons data-bind='visible: ! saving()'
+          button.save   data-bind='click: save'   Save
+          button.cancel data-bind='click: cancel' Cancel
+        .buttons data-bind='visible: saving'
+          .alert.alert-warning 
+            span Saving please wait...
+            = fa_icon 'cog', class: 'fa-spin'
+      
+  
