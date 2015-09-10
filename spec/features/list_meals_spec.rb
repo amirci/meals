@@ -4,6 +4,11 @@ feature "Meals Index", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
+  before do
+    user = create(:user)
+    login_as(user, :scope => :user)
+  end
+  
   context 'When meals exists in the database for the current user' do
     before do
       FoodDiary.create_days 2

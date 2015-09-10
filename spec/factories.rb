@@ -82,6 +82,15 @@ module FoodDiary
 end
 
 FactoryGirl.define do  
+  
+  factory :potential_user, class: User do
+    email { Faker::Internet.email }
+    password "password"
+    password_confirmation "password"
+    
+    factory :user do
+    end
+  end
 
   factory :meal do
     transient do

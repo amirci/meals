@@ -9,6 +9,8 @@ feature "Adding meals", js: true do
   let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with dumplings', calories: 2000 }
   
   before do
+    user = create(:user)
+    login_as(user, :scope => :user)
     meals_page.open
   end
   

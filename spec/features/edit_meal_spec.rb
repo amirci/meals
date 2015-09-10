@@ -11,6 +11,8 @@ feature "Edit meal", js: true do
   let(:new_meal) { build :supper, meal: 'Steak & fries', calories: '1500', date: meal.logged_at }
   
   before do
+    user = create(:user)
+    login_as(user, :scope => :user)
     meals_page.open
   end
   

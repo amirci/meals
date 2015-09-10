@@ -1,6 +1,15 @@
 
 module PageObject
   include Capybara::DSL
+  
+  def handle_js_confirm(accept=true)
+      page.execute_script "window.original_confirm_function = window.confirm"
+      page.execute_script "window.confirmMsg = null"
+      page.execute_script "window.confirm = function(msg) { window.confirmMsg = msg; return #{!!accept}; }"
+      yield
+  ensure
+      page.execute_script "window.confirm = window.original_confirm_function"
+  end
 end
 
 Capybara.add_selector(:meal_id) do
@@ -30,11 +39,10 @@ class MealIndexPage
     load_meal new_meal
   end
 
-  def begin_remove_meal(meal)
+  def remove_meal(meal, confirm)
     meal_reg = find(:meal_id, meal.id)
     meal_reg.hover
-    meal_reg.find('.delete').click
-    ConfirmDialog.new
+    handle_js_confirm(confirm) { meal_reg.find('.delete').click }
   end
   
   def has_empty_notice?
