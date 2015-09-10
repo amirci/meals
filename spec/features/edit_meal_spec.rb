@@ -1,28 +1,29 @@
 require 'rails_helper'
 
-feature "Adding meals", js: true do
+feature "Edit meal", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
-  let!(:old_meals) { create_list :lunch, 2 }
+  let(:meal)     { create :lunch, meal: 'Chicken Pomodoro', calories: '2200' }
   
-  let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with dumplings', calories: 2000 }
+  let!(:meals)   { [meal] }
+  
+  let(:new_meal) { build :supper, meal: 'Steak & fries', calories: '1500', date: meal.logged_at }
   
   before do
     meals_page.open
   end
   
   context 'When confirming' do
-    let!(:dialog) { meals_page.begin_create_meal new_meal }
+    let!(:dialog) { meals_page.begin_edit_meal meal, new_meal }
     
     let(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
     
-    it "Adds the meal" do
+    it "Changes the meal information" do
       dialog.save
       
       eventually {
         expect(meals_page.meal_list).to eq expected
-        expect(Meal.all.count).to eq 3
         expect(Meal.last.meal).to eq new_meal.meal
       }
     end
@@ -30,15 +31,16 @@ feature "Adding meals", js: true do
   end
   
   context 'When cancelling' do
-    let!(:dialog) { meals_page.begin_create_meal new_meal }
+    let!(:dialog) { meals_page.begin_edit_meal meal, new_meal }
 
     let!(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
     
-    it "Does not add the meal" do
+    it "Does not change the meal information" do
       dialog.cancel
 
-      expect(meals_page.meal_list).to eq expected
-      expect(Meal.all.count).to eq 2
+      eventually {
+        expect(meals_page.meal_list).to eq expected
+      }
     end
   end
   

@@ -89,15 +89,11 @@ class MealsApp.MealsIndexViewModel
     @editor.open(@save)
     
   save: (meal, options) =>
-    success = options.success
-    
-    options.success = =>
-      success()
-      @insertMeal meal
-      
+    options.success = [options.success, (data) => @insertMeal meal, data]
     MealsApp.Meal.save meal, options
     
-  insertMeal: (meal) =>
+  insertMeal: (meal, data) =>
+    meal.id = data.id if data?.id
     key = meal.moment.format('YYYY-MM-DD')
     bigger = ([d, i] for d, i in @days() when d.date <= key)
 
@@ -121,10 +117,10 @@ class DayMealsViewModel
 
   addMeal: (m) ->
     key = m.moment.format('HH:mm')
-    bigger = (i for d, i in @meals() when d.time >= key)
+    bigger = (i for d, i in @meals() when d.time() >= key)
     index = if bigger?.length then bigger[0] else @meals().length
 
-    @meals.splice index, 0, new MealViewModel(m)
+    @meals.splice index, 0, new MealViewModel(m, @total)
     @total @total() + m.calories
     
 
