@@ -1,6 +1,6 @@
 class MealsController < ApplicationController
   before_action :set_meal, only: [:update, :destroy]
-#  respond_to :json
+  # respond_to :json
 
   # GET /meals
   # GET /meals.json
@@ -21,12 +21,10 @@ class MealsController < ApplicationController
 
   # PATCH/PUT /meals/1.json
   def update
-    respond_to do |format|
-      if @meal.update(meal_params)
-        format.json { render :show, status: :ok, location: @meal }
-      else
-        format.json { render json: @meal.errors, status: :unprocessable_entity }
-      end
+    if @meal.update(meal_params)
+      render :show, status: :ok, location: api_v1_meal_url(@meal)
+    else
+      render json: @meal.errors, status: :unprocessable_entity
     end
   end
 

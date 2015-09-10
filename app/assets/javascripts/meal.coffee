@@ -2,24 +2,34 @@
 
 class MealsApp.Meal
   
-  constructor: (@date, @meal, @calories) ->
+  constructor: (@id, @date, @meal, @calories) ->
     @moment = moment(@date, [moment.ISO_8601, 'YYYY-MM-DD hh:mm:ss', 'YYYY-MM-DD hh:mm'])
     @logged_at = @date
     
+  @update: (meal, options={}) ->
+    Meal.apiCall meal, Routes.api_v1_meal_path(meal.id), 'PUT', options
+      
   @save: (meal, options={}) ->
-    nop = ->
+    Meal.apiCall meal, Routes.api_v1_meals_path(), 'POST', options
 
+  @jsonData: (meal) ->
     data =
       meal:
         logged_at: meal.date
         calories: parseInt(meal.calories)
         meal: meal.meal
+    
+    JSON.stringify(data)
 
+  nop = ->
+    
+  @apiCall: (meal, route, type, options={}) ->
     $.ajax(
-      url: '/api/v1/meals.json'
-      data: JSON.stringify(data)
-      type: 'POST'
+      url: route
+      data: Meal.jsonData(meal)
+      type: type
       contentType: "application/json; charset=utf-8"
       dataType: "json"      
     ).success(options.success || nop).fail(options.error || nop).always(options.complete || nop)
+    
 

@@ -89,7 +89,7 @@ FactoryGirl.define do
     end
     
     meal      { Dishes::dish }
-    logged_at { date }
+    logged_at { date.in_time_zone }
     calories  { Faker::Number.between(100, 1200) }
 
     factory :supper do

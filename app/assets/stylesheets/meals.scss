@@ -33,12 +33,13 @@
   }
   
   .new-meal-form {
-    @extend .well;
-    margin: 10px auto 20px;
-    width: 60%;
-    
-    
     label { margin-right: 10px; }
+    
+    .modal-header {
+      font-size: 1.5em;
+      background-color: #2c3e50; 
+      color: white;
+    }
     
     .buttons {
       text-align:center;
@@ -61,9 +62,14 @@
     }
     
     input, select { 
-      margin-right: 20px; 
+//      margin-right: 20px;
       height: auto;
       padding: 5px 10px;
+    }
+    
+    select { 
+      display: inline-block; 
+      width: auto;
     }
     
     form { 
@@ -162,6 +168,26 @@
           height: 30px;
           vertical-align: middle;
         }
+        
+        .tools {
+          button {
+            @extend .btn;
+            @extend .btn-default;
+            @extend .btn-xs;
+            
+            &:first-child { margin-right: 10px; }
+          }
+          
+          .edit { 
+            &:hover { @extend .btn-info; } 
+          }
+          
+          .delete  { 
+            &:hover { @extend .btn-danger; } 
+          }
+        }
+        
+        
         &:nth-child(even) {
           .time, .meal, .calories, .tools { 
             background-color: #2c3e50; 
@@ -189,7 +215,7 @@
         };
 
         .calories {
-          width: 50px;
+          width: 100px;
           text-align: right;
           padding-right: 25px;
           white-space: nowrap;
