@@ -12,6 +12,14 @@ class MealsApp.Meal
   @save: (meal, options={}) ->
     Meal.apiCall meal, Routes.api_v1_meals_path(), 'POST', options
 
+  @remove: (id, options={}) ->
+    $.ajax(
+      url: Routes.api_v1_meal_path(id)
+      type: 'DELETE'
+      contentType: "application/json; charset=utf-8"
+      dataType: "json"      
+    ).success(options.success || nop).fail(options.error || nop).always(options.complete || nop)
+    
   @jsonData: (meal) ->
     data =
       meal:

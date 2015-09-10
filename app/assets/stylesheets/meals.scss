@@ -140,13 +140,13 @@
         width: 100%;
         
         .panel-heading {
-          font-size: .6em;
+          font-size: .8em;
           padding: 5px 0px;
         }
         
         .panel-body {
           padding: 5px 0px;
-          font-size: .8em;
+          font-size: .7em;
         }
       }
     }
@@ -169,7 +169,12 @@
           vertical-align: middle;
         }
         
+        
         .tools {
+          .confirmation, .editing {
+            display: inline-block;
+          }
+          
           button {
             @extend .btn;
             @extend .btn-default;

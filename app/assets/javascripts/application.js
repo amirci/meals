@@ -20,7 +20,8 @@
 //= require bootstrap-datepicker  
 //= require moment
 //= require js-routes
-//= require pnotify  
+//= require pnotify
+    
 //= require handlers
 //= require meals_app
 //= require meals

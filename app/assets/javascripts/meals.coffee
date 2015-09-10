@@ -133,6 +133,7 @@ class MealViewModel
     @time     = ko.pureComputed => @moment().format('HH:mm')
     @meal     = ko.observable m.meal
     @editor   = MealEditor.create()
+    @confirm  = ko.observable false
     
   edit: =>
     @editor.open(@update, @)
@@ -150,4 +151,6 @@ class MealViewModel
     $("[data-id='#{@id}'] div").effect('highlight', {}, 5000)
     
     
-  remove: => alert 'are you sure?'
+  remove: =>
+    if confirm("Are you sure you want to remove #{@meal()}?")
+      MealsApp.Meal.remove @id

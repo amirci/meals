@@ -30,6 +30,12 @@ class MealIndexPage
     load_meal new_meal
   end
 
+  def begin_remove_meal(meal)
+    meal_reg = find(:meal_id, meal.id)
+    meal_reg.hover
+    meal_reg.find('.delete').click
+    ConfirmDialog.new
+  end
   
   def has_empty_notice?
     has_css? '.message'
@@ -44,6 +50,18 @@ class MealIndexPage
     end
   end
 
+  class ConfirmDialog
+    include PageObject
+    
+    def confirm
+      page.driver.browser.switch_to.alert.accept
+    end
+    
+    def cancel
+      page.driver.browser.switch_to.alert.cancel
+    end
+  end
+  
   class MealDialog
     include PageObject
   
