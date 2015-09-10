@@ -124,18 +124,20 @@ class DayMealsViewModel
     @total @total() + m.calories
     
   remove: (meal) =>
-    if confirm("Are you sure you want to remove -- #{meal.meal()}?")
+    if confirm("Are you sure you want to remove -- #{meal.meal()} -- ?")
       MealsApp.Meal.remove meal.id, 
         success: => @removeMeal meal
+        error: -> new PNotify(title: 'Removing meal', text: 'Sorry an error occured', type: 'error')
         
   removeMeal: (meal) =>
     index = @meals.indexOf meal
-    @meals.splice index, 1
     @total @total() - meal.calories()
+    @meals.splice index, 1
 
-  hideMeal: (elem) ->
+  hideMeal: (elem) =>
     if elem.nodeType == 1
-      $(elem).find('div').fadeOut 1000, -> $(elem).remove()
+      elem = if @total() == 0 then $(elem).closest('.date-reg') else $(elem).find('div')
+      elem.fadeOut 1000, -> elem.remove
 
 class MealViewModel
   

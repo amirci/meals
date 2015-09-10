@@ -15,7 +15,7 @@ class MealIndexPage
   end
   
   def meal_list
-    all('.date-reg').map { |n| DayMealsPart.parse n }
+    all('.date-reg', :visible => true).map { |n| DayMealsPart.parse n }
   end
 
   def begin_create_meal(meal)
@@ -58,7 +58,7 @@ class MealIndexPage
     end
     
     def cancel
-      page.driver.browser.switch_to.alert.cancel
+      page.driver.browser.switch_to.alert.dismiss
     end
   end
   
@@ -85,7 +85,7 @@ class MealIndexPage
     
     class << self
       def parse_meals(node)
-        node.all('.meal-reg').map do |mreg|
+        node.all('.meal-reg', :visible => true).map do |mreg|
           MealReg.new(mreg[:'data-id'].to_i, mreg.find('.time').text, mreg.find('.calories').text.to_i, mreg.find('.meal').text)
         end
       end
