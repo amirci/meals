@@ -19,7 +19,7 @@
         .panel-heading Total
         .panel-body data-bind='text: total() + " Cal."'
     .meals
-      /! ko foreach: meals
+      /! ko foreach: {data: meals, beforeRemove: hideMeal}
       .meal-reg data-bind="attr: {'data-id': id}"
         .time     data-bind='text: time'
         .calories data-bind='text: calories'
@@ -27,7 +27,7 @@
         .tools 
           button.edit data-bind="click: edit"
             = fa_icon 'pencil', :'data-title' => 'Edit' 
-          button.delete data-bind="click: remove" data-toggle="confirmation"
+          button.delete data-bind="click: $parent.remove"
             = fa_icon 'trash', :'data-title' => 'Delete'
       /! /ko
   /! /ko

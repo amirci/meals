@@ -123,6 +123,19 @@ class DayMealsViewModel
     @meals.splice index, 0, new MealViewModel(m, @total)
     @total @total() + m.calories
     
+  remove: (meal) =>
+    if confirm("Are you sure you want to remove -- #{meal.meal()}?")
+      MealsApp.Meal.remove meal.id, 
+        success: => @removeMeal meal
+        
+  removeMeal: (meal) =>
+    index = @meals.indexOf meal
+    @meals.splice index, 1
+    @total @total() - meal.calories()
+
+  hideMeal: (elem) ->
+    if elem.nodeType == 1
+      $(elem).find('div').fadeOut 1000, -> $(elem).remove()
 
 class MealViewModel
   
@@ -151,6 +164,3 @@ class MealViewModel
     $("[data-id='#{@id}'] div").effect('highlight', {}, 5000)
     
     
-  remove: =>
-    if confirm("Are you sure you want to remove #{@meal()}?")
-      MealsApp.Meal.remove @id

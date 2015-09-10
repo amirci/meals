@@ -39,6 +39,13 @@ RSpec.describe "Meals API", type: :request do
         expect(Meal.all).to eq [old_meal]
       end
     end
+    
+    context 'when the meal does not exist' do
+      it 'removes the meal' do
+        delete api_v1_meal_path(3), format: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
   end
   
   describe 'PUT /api/v1/meals/:id' do
