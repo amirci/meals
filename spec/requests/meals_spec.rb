@@ -25,7 +25,9 @@ RSpec.describe "Meals API", type: :request do
   describe "GET /api/v1/meals" do
     before {FoodDiary.create_days 1}
 
-    it_rejects_unauthorized_access '/api/v1/meals'
+    it_behaves_like 'rejects_unauthorized_access' do
+      before { get api_v1_meals_path }
+    end
     
     it "Returns all the meals for the current user" do
       get api_v1_meals_path, {format: :json}, headers
@@ -38,6 +40,10 @@ RSpec.describe "Meals API", type: :request do
     let!(:meal)     { create :lunch }
     let!(:old_meal) { create :supper }
     
+    it_behaves_like 'rejects_unauthorized_access' do
+      before { delete api_v1_meal_path(meal) }
+    end
+
     context 'when the meal exists' do
       it 'removes the meal' do
         delete api_v1_meal_path(meal), {format: :json}, headers
@@ -59,6 +65,10 @@ RSpec.describe "Meals API", type: :request do
     let(:new_meal) { attributes_for(:supper) }
     let(:expected) { JSON.parse({'id' => meal.id}.merge(new_meal).to_json) }
     
+    it_behaves_like 'rejects_unauthorized_access' do
+      before { put api_v1_meal_path(meal) }
+    end
+
     context 'When parameters are valid' do
       it 'Updates the meal with new values' do
         put api_v1_meal_path(meal), {:format => :json, meal: new_meal}, headers
@@ -81,6 +91,10 @@ RSpec.describe "Meals API", type: :request do
     let(:new_meal) { attributes_for :lunch }
     let(:expected) { JSON.parse({'id' => 1}.merge(new_meal).to_json) }
     
+    it_behaves_like 'rejects_unauthorized_access' do
+      before { post api_v1_meals_path }
+    end
+
     context 'When parameters are valid' do
       it 'creates a new meal for the current user' do
         post api_v1_meals_path, {:format => :json, meal: new_meal}, headers

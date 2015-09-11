@@ -1,4 +1,17 @@
 .meals-index
+  .calories-per-day data-bind='with: configEditor'
+    form.form-inline
+      .form-group.form-group-sm
+        label Target calories per day
+        .form-control.form-control-static data-bind='text: calories, visible: ! editing()'
+        input.form-control type='text' data-bind='value: caloriesEdit, visible: editing, hasFocus: editFocus'
+      button.edit data-bind='click: edit, visible: ! editing()'
+        = fa_icon 'pencil'
+      button.save data-bind='click: save, visible: editing'
+        = fa_icon 'check'
+      button.cancel data-bind='click: cancel, visible: editing'
+        = fa_icon 'close'
+  
   h1 
     span My meals
     button.new-meal data-bind='click: newMeal' data-title='Add a new one'
@@ -34,11 +47,12 @@
   
 
 javascript:
-  window.meals_json = #{raw @meals.to_json(except: [:created_at, :updated_at])}
+  window.mealsJson = #{raw @meals.to_json(except: [:created_at, :updated_at])}
+  window.currentUser = #{raw (current_user || {}).to_json(only: [:id, :email, :calories])}
   
 coffee:
   $ -> 
-    vm = new MealsApp.MealsIndexViewModel(meals_json)
+    vm = new MealsApp.MealsIndexViewModel(mealsJson, currentUser)
     ko.applyBindings vm, $('.meals-index')[0] 
     
     $("input.date_picker:not([readonly])").datepicker({

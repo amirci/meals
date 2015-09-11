@@ -26,6 +26,7 @@
 //= require meals_app
 //= require meals
 //= require meal
+//= require user_config
 
   
 

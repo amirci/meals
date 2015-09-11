@@ -1,6 +1,8 @@
 
 describe 'MealsApp.MealsIndexViewModel', ->
 
+  user = {id:1, email: 'user@example.com', calores: 1200}
+  
   describe '#insertMeal', ->
     
     describe 'When the date already exists', ->
@@ -11,7 +13,7 @@ describe 'MealsApp.MealsIndexViewModel', ->
           {date: '2015-07-20', calories: 2200, meals: [{meal: 'Apple'  , calories:100 , logged_at: "2015-07-20 07:00"}]},
         ]
         
-        vm = new MealsApp.MealsIndexViewModel days
+        vm = new MealsApp.MealsIndexViewModel days, user
         meal = new MealsApp.Meal(1, '2015-07-22 08:30', 'Steak', 1000)
 
         vm.insertMeal meal
@@ -32,7 +34,7 @@ describe 'MealsApp.MealsIndexViewModel', ->
           {date: '2015-07-20', calories: 2200, meals: [{meal: 'Apple'  , calories:100 , logged_at: "2015-07-20 07:00"}]},
         ]
         
-        vm = new MealsApp.MealsIndexViewModel days
+        vm = new MealsApp.MealsIndexViewModel days, user
         meal = new MealsApp.Meal(1, '2015-07-21 08:30', 'Steak', 1000)
 
         vm.insertMeal meal
@@ -57,7 +59,7 @@ describe 'MealsApp.MealsIndexViewModel', ->
         {date: '2015-07-20', calories: 2200, meals: meals}
       ]
 
-      index = new MealsApp.MealsIndexViewModel days
+      index = new MealsApp.MealsIndexViewModel days, user
     
       expect(index.days().length).toBe(1)
 
