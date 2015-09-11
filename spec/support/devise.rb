@@ -8,6 +8,7 @@ module ControllerMacros
 #     end
 #   end
 #
+
   def login_user
     let(:user) { FactoryGirl.create(:user) }
 
@@ -18,8 +19,22 @@ module ControllerMacros
   end
 end
 
+module RequestMacros
+  include Rails.application.routes.url_helpers
+  
+  def it_rejects_unauthorized_access(url)
+    context 'when not authorized' do
+      it "returns unauthorized" do
+        get url, format: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, :type => :controller
+  config.extend RequestMacros, :type => :request
 end
 

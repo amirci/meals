@@ -18,11 +18,17 @@ RSpec.describe "Meals API", type: :request do
     end.to_json
   end
   
+  let(:user) { create :user }
+
+  let(:headers) { {'X-User-Email' => user.email, 'X-User-Token' => user.authentication_token} }
+
   describe "GET /api/v1/meals" do
     before {FoodDiary.create_days 1}
+
+    it_rejects_unauthorized_access '/api/v1/meals'
     
     it "Returns all the meals for the current user" do
-      get api_v1_meals_path, format: :json
+      get api_v1_meals_path, {format: :json}, headers
       expect(response).to have_http_status(:ok)
       expect(response.body).to eq expected
     end
@@ -34,7 +40,7 @@ RSpec.describe "Meals API", type: :request do
     
     context 'when the meal exists' do
       it 'removes the meal' do
-        delete api_v1_meal_path(meal), format: :json
+        delete api_v1_meal_path(meal), {format: :json}, headers
         expect(response).to have_http_status(:no_content)
         expect(Meal.all).to eq [old_meal]
       end
@@ -42,7 +48,7 @@ RSpec.describe "Meals API", type: :request do
     
     context 'when the meal does not exist' do
       it 'removes the meal' do
-        delete api_v1_meal_path(3), format: :json
+        delete api_v1_meal_path(3), {format: :json}, headers
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -55,7 +61,7 @@ RSpec.describe "Meals API", type: :request do
     
     context 'When parameters are valid' do
       it 'Updates the meal with new values' do
-        put api_v1_meal_path(meal), :format => :json, meal: new_meal
+        put api_v1_meal_path(meal), {:format => :json, meal: new_meal}, headers
         expect(response).to have_http_status(:ok)
         expect(JSON.parse response.body).to eq expected
       end
@@ -64,7 +70,7 @@ RSpec.describe "Meals API", type: :request do
     context 'When parameters are valid' do
       let(:invalid_meal) { attributes_for :invalid_meal }
       it 'Updates the meal with new values' do
-        put api_v1_meal_path(meal), :format => :json, meal: invalid_meal
+        put api_v1_meal_path(meal), {:format => :json, meal: invalid_meal}, headers
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -77,7 +83,7 @@ RSpec.describe "Meals API", type: :request do
     
     context 'When parameters are valid' do
       it 'creates a new meal for the current user' do
-        post api_v1_meals_path, :format => :json, meal: new_meal
+        post api_v1_meals_path, {:format => :json, meal: new_meal}, headers
         expect(response).to have_http_status(:created)
         expect(JSON.parse response.body).to eq expected
       end
@@ -87,7 +93,7 @@ RSpec.describe "Meals API", type: :request do
       let(:invalid_meal) { attributes_for :invalid_meal }
 
       it 'Returns an error' do
-        post api_v1_meals_path, format: :json, meal: invalid_meal
+        post api_v1_meals_path, {format: :json, meal: invalid_meal}, headers
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
