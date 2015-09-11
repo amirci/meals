@@ -107,9 +107,9 @@ class UserConfiguration
 class MealsApp.MealsIndexViewModel
   
   constructor: (meals, currentUser) ->
-    @days = ko.observableArray(new DayMealsViewModel(m) for m in meals)
-    @editor = MealEditor.create()
     @configEditor = new UserConfiguration(currentUser)
+    @days = ko.observableArray(new DayMealsViewModel(@configEditor.calories, m) for m in meals)
+    @editor = MealEditor.create()
     
   newMeal: => 
     @editor.open(@save)
@@ -126,14 +126,14 @@ class MealsApp.MealsIndexViewModel
     [found, index] = if bigger?.length then bigger[0] else [null, @days().length]
 
     unless found?.date == key
-      found = new DayMealsViewModel(date: meal.date, calories: 0, meals: [])
+      found = new DayMealsViewModel(@configEditor.calories, {date: meal.date, calories: 0, meals: []})
       @days.splice(index, 0, found)
 
     found.addMeal(meal)
     
 class DayMealsViewModel
   
-  constructor: (m) ->
+  constructor: (@dailyIntake, m) ->
     @moment = moment(m.date)
     @date   = @moment.format('YYYY-MM-DD')
     @day    = @moment.format('MMM D')
@@ -141,6 +141,9 @@ class DayMealsViewModel
     @total  = ko.observable m.calories
     @meals  = ko.observableArray(new MealViewModel(meal, @total) for meal in m.meals)
 
+    @matchTotal = ko.pureComputed => 
+      if @total() > @dailyIntake() then "red" else "green"
+    
   addMeal: (m) ->
     key = m.moment.format('HH:mm')
     bigger = (i for d, i in @meals() when d.time() >= key)

@@ -25,7 +25,7 @@ class MealsApp.Meal
       meal:
         logged_at: meal.date
         calories: parseInt(meal.calories)
-        meal: meal.meal
+        meal: meal.meal.trim()
     
     JSON.stringify(data)
 
