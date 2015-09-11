@@ -34,6 +34,10 @@ gem 'bootstrap-datepicker-rails'
 gem 'js-routes'
 gem 'pnotify-rails'
 
+gem 'devise'
+gem 'simple_token_authentication', '~> 1.0'
+gem 'devise-bootstrap-views'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

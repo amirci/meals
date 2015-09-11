@@ -1,5 +1,6 @@
 class MealsController < ApplicationController
   before_action :set_meal, only: [:update, :destroy]
+  before_action :authenticate_user!
   # respond_to :json
 
   # GET /meals

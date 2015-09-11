@@ -1,24 +1,24 @@
 require 'rails_helper'
 
-feature "Removing meals", js: true, selenium: true, broken: true do
+feature "Removing meals", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
   let!(:meals)     { create_list :lunch, 2 }
   
-  let(:meal)   { meals.last }
+  let(:meal)       { meals.last }
   
   before do
+    user = create(:user)
+    login_as(user, :scope => :user)
     meals_page.open
   end
   
   context 'When confirming' do
-    let!(:dialog) { meals_page.begin_remove_meal meal }
-    
     let(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
     
     it "Removes the meal" do
-      dialog.confirm
+      meals_page.remove_meal meal, true
       
       eventually {
         expect(meals_page.meal_list).to eq expected
@@ -30,12 +30,10 @@ feature "Removing meals", js: true, selenium: true, broken: true do
   end
   
   context 'When cancelling' do
-    let!(:dialog) { meals_page.begin_remove_meal meal }
-
     let!(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
     
     it "Does not remove the meal" do
-      dialog.cancel
+      meals_page.remove_meal meal, false
 
       expect(meals_page.meal_list).to eq expected
       expect(Meal.all.count).to eq 2
