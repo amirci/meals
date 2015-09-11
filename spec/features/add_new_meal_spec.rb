@@ -4,12 +4,13 @@ feature "Adding meals", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
-  let!(:old_meals) { create_list :lunch, 2 }
+  let!(:old_meals) { create_list :lunch, 2, user: user }
   
   let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with dumplings', calories: 2000 }
+
+  let(:user)  {create(:user)}
   
   before do
-    user = create(:user)
     login_as(user, :scope => :user)
     meals_page.open
   end
@@ -17,7 +18,7 @@ feature "Adding meals", js: true do
   context 'When confirming' do
     let!(:dialog) { meals_page.begin_create_meal new_meal }
     
-    let(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
+    let(:expected) { MealIndexPage.from_meals Meal.for_user(user).totals_by_date }
     
     it "Adds the meal" do
       dialog.save

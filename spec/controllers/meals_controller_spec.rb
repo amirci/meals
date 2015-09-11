@@ -11,9 +11,13 @@ RSpec.describe MealsController, type: :controller do
   login_user
   
   describe "GET #index" do
-    before  {FoodDiary.create_days 1}
-    it "assigns all meals grouped by date @meals" do
-      meals = Meal.totals_by_date
+    before do
+      FoodDiary.create_days 1, user
+      FoodDiary.create_days 1, create(:user)
+    end
+    
+    it "assigns all meals grouped by date @meals for the current user" do
+      meals = Meal.for_user(user).totals_by_date
       get :index, {}, valid_session
       expect(assigns(:meals)).to eq meals
     end

@@ -22,6 +22,20 @@ RSpec.describe Meal, type: :model do
   
   context 'Scopes' do
     
+    describe '.for_user' do
+      let(:user) { create :user }
+      let(:other_user) { create :user }
+      
+      before do
+        create_list :meal, 10, user: user
+        create_list :meal, 10, user: other_user
+      end
+      
+      it 'returns the meals for the specified user' do
+        expect(Meal.for_user user).to eq Meal.where(user: user)
+      end
+    end
+    
     describe '.totals_by_date' do
       let(:date)   { 1.day.ago }
       let(:date2)  { 2.day.ago }

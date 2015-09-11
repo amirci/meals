@@ -65,13 +65,13 @@ end
 
 module FoodDiary
 
-  def self.create_for(date)
+  def self.create_for(date, user=nil)
     [:breakfast, :morning_snack, :lunch, :afternoon_snack, :supper].map do |meal|
-      FactoryGirl.create meal, date: date
+      FactoryGirl.create meal, date: date, user: user
     end
   end
   
-  def self.create_days(number)
+  def self.create_days(number, user=nil)
     number.times { |i| create_for i.days.ago }
   end
   

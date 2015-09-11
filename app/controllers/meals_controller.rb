@@ -6,7 +6,7 @@ class MealsController < ApplicationController
   # GET /meals
   # GET /meals.json
   def index
-    @meals = Meal.totals_by_date
+    @meals = Meal.for_user(current_user).totals_by_date
   end
 
   # POST /meals.json

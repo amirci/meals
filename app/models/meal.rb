@@ -2,6 +2,10 @@ class Meal < ActiveRecord::Base
 
   validates_presence_of :meal, :logged_at, :calories
   validates_numericality_of :calories, only_integer: true, greater_than: 0
+
+  belongs_to :user
+  
+  scope :for_user, ->(u) { where(user: u) }
   
   def self.totals_by_date
     all

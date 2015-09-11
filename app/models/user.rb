@@ -6,4 +6,6 @@ class User < ActiveRecord::Base
   # :recoverable, 
   devise :database_authenticatable, :registerable,
          :rememberable, :trackable, :validatable
+         
+ has_many :meals
 end

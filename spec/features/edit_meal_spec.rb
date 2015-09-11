@@ -4,14 +4,15 @@ feature "Edit meal", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
-  let(:meal)     { create :lunch, meal: 'Chicken Pomodoro', calories: '2200' }
+  let(:meal)     { create :lunch, user: user, meal: 'Chicken Pomodoro', calories: '2200' }
   
   let!(:meals)   { [meal] }
   
   let(:new_meal) { build :supper, meal: 'Steak & fries', calories: '1500', date: meal.logged_at }
   
+  let(:user)  { create(:user)}
+  
   before do
-    user = create(:user)
     login_as(user, :scope => :user)
     meals_page.open
   end
@@ -19,7 +20,7 @@ feature "Edit meal", js: true do
   context 'When confirming' do
     let!(:dialog) { meals_page.begin_edit_meal meal, new_meal }
     
-    let(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
+    let(:expected) { MealIndexPage.from_meals Meal.for_user(user).totals_by_date }
     
     it "Changes the meal information" do
       dialog.save

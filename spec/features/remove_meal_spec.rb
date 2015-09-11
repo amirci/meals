@@ -4,18 +4,18 @@ feature "Removing meals", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
-  let!(:meals)     { create_list :lunch, 2 }
+  let!(:meals)     { create_list :lunch, 2, user: user }
   
   let(:meal)       { meals.last }
   
+  let(:user)  {create(:user)}
   before do
-    user = create(:user)
     login_as(user, :scope => :user)
     meals_page.open
   end
   
   context 'When confirming' do
-    let(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
+    let(:expected) { MealIndexPage.from_meals Meal.for_user(user).totals_by_date }
     
     it "Removes the meal" do
       meals_page.remove_meal meal, true

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Meals API", type: :request do
 
   let(:expected) do
-    Meal.totals_by_date.map do |day_meals|
+    Meal.for_user(user).totals_by_date.map do |day_meals|
       {
         'date'     => day_meals.date, 
         'calories' => day_meals.calories,
@@ -23,7 +23,7 @@ RSpec.describe "Meals API", type: :request do
   let(:headers) { {'X-User-Email' => user.email, 'X-User-Token' => user.authentication_token} }
 
   describe "GET /api/v1/meals" do
-    before {FoodDiary.create_days 1}
+    before {FoodDiary.create_days 1, user: user}
 
     it_behaves_like 'rejects_unauthorized_access' do
       before { get api_v1_meals_path }
