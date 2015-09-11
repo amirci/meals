@@ -36,7 +36,7 @@ class MealIndexPage
     meal_reg = find(:meal_id, old_meal.id)
     meal_reg.hover
     meal_reg.find('.edit').click
-    load_meal new_meal
+    load_meal new_meal, false
   end
 
   def remove_meal(meal, confirm)
@@ -109,8 +109,8 @@ class MealIndexPage
     end
   end
   
-  def load_meal(meal)
-    fill_in 'meal_date', with: meal.logged_at.strftime('%b %d, %Y')
+  def load_meal(meal, new_meal=true)
+    fill_in('meal_date', with: meal.logged_at.strftime('%b %d, %Y')) if new_meal
     select meal.logged_at.strftime('%H'), from: 'meal_hours'
     select meal.logged_at.strftime('%M'), from: 'meal_minutes'
     fill_in 'meal_calories', with: meal.calories

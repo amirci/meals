@@ -31,6 +31,8 @@ class MealEditor
     @minutes  = ko.observable()
     @meal     = ko.observable()
     
+    @isNewMeal = ko.observable false
+    
     @cal_vm     = ko.pureComputed
       read: => @calories()
       write: (value) => @calories parseInt(value)
@@ -40,10 +42,11 @@ class MealEditor
       read: => @date().format('MMM D, YYYY')
       write: (value) => @date moment(value, 'MMM D, YYYY')
   
-  open: (saveMeal, current={}) =>
+  open: (saveMeal, current={}, newMeal=true) =>
     @saving false
     @saveMeal = saveMeal
     @load current
+    @isNewMeal newMeal
     $(".new-meal-form").modal()    
 
   load: (meal={}) =>
@@ -79,10 +82,6 @@ class MealEditor
     @saveMeal meal, options
       
   
-  
-  
-
-
 class UserConfiguration
   
   constructor: (@currentUser)->
@@ -141,8 +140,7 @@ class DayMealsViewModel
     @total  = ko.observable m.calories
     @meals  = ko.observableArray(new MealViewModel(meal, @total) for meal in m.meals)
 
-    @matchTotal = ko.pureComputed => 
-      if @total() > @dailyIntake() then "red" else "green"
+    @matchTotal = ko.pureComputed => if @total() > @dailyIntake() then "red" else "green"
     
   addMeal: (m) ->
     key = m.moment.format('HH:mm')
@@ -180,7 +178,7 @@ class MealViewModel
     @confirm  = ko.observable false
     
   edit: =>
-    @editor.open(@update, @)
+    @editor.open(@update, @, false)
   
   update: (meal, options) =>
     options.success = [options.success, => @updateMeal meal]

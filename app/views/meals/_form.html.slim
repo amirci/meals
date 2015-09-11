@@ -8,7 +8,7 @@
           .form-group
             label.col-xs-2 for='date' Date
             .col-xs-3
-              input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm'
+              input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm, enable: isNewMeal'
             label.col-xs-1 Time
             .col-xs-4
               select.form-control.hours name='meal_hours' type='text' data-bind="options: hours_vm, value: hour"
