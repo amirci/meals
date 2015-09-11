@@ -23,7 +23,7 @@
   = render partial: 'form'
 
   /! ko foreach: days
-  .date-reg
+  .date-reg data-bind='css: matchTotal'
     .info
       .date 
         .day   data-bind='text: day'

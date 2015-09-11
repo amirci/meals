@@ -191,6 +191,14 @@
         }
       }
     }
+    &.red {
+      .info .total { @extend .panel-danger; }
+    }
+    
+    &.green {
+      .info .total { @extend .panel-success; }
+    }
+    
     
     .meals {
       display: table-cell;

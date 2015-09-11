@@ -52,7 +52,7 @@ class MealIndexPage
   def self.from_meals(days)
     days.map do |d|
       meals = d.meals.map do |m| 
-        DayMealsPart::MealReg.new m.id, m.logged_at.strftime('%H:%M'), m.calories, m.meal
+        DayMealsPart::MealReg.new m.id, m.logged_at.strftime('%H:%M'), m.calories, m.meal.strip
       end
       DayMealsPart.new(d.date, d.calories, meals)
     end
@@ -94,7 +94,7 @@ class MealIndexPage
     class << self
       def parse_meals(node)
         node.all('.meal-reg', :visible => true).map do |mreg|
-          MealReg.new(mreg[:'data-id'].to_i, mreg.find('.time').text, mreg.find('.calories').text.to_i, mreg.find('.meal').text)
+          MealReg.new(mreg[:'data-id'].to_i, mreg.find('.time').text.strip, mreg.find('.calories').text.to_i, mreg.find('.meal').text.strip)
         end
       end
     
