@@ -48,11 +48,11 @@
 
 javascript:
   window.mealsJson = #{raw @meals.to_json(except: [:created_at, :updated_at])}
-  window.currentUser = #{raw (current_user || {}).to_json(only: [:id, :email])}
+  window.currentUser = #{raw (current_user || {}).to_json(only: [:id, :email, :calories])}
   
 coffee:
   $ -> 
-    vm = new MealsApp.MealsIndexViewModel(mealsJson)
+    vm = new MealsApp.MealsIndexViewModel(mealsJson, currentUser)
     ko.applyBindings vm, $('.meals-index')[0] 
     
     $("input.date_picker:not([readonly])").datepicker({

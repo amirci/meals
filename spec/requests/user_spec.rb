@@ -1,12 +1,17 @@
 require 'rails_helper'
 
-RSpec.describe "User API", :type => :request, focus: true do
+RSpec.describe "User API", :type => :request do
 
   let(:user) { create :user, calories: 1000 }
 
   let(:headers) { {'X-User-Email' => user.email, 'X-User-Token' => user.authentication_token} }
 
   describe 'PUT /api/v1/user/:id' do
+
+    it_behaves_like 'rejects_unauthorized_access' do
+      before { put api_v1_user_path(user) }
+    end
+    
     it 'updates the user configuration' do
       put api_v1_user_path(user), {format: :json, config: {calories: 1500}}, headers
       expect(response).to have_http_status(:ok)
