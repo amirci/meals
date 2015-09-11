@@ -79,11 +79,37 @@ class MealEditor
     @saveMeal meal, options
       
   
+  
+  
+
+
+class UserConfiguration
+  
+  constructor: ->
+    @calories = ko.observable 1200
+    @editing = ko.observable false
+    @caloriesEdit = ko.observable @calories()
+    @editFocus = ko.observable false
+    
+  edit: =>
+    @caloriesEdit @calories()
+    @editing true
+    @editFocus true
+    
+  save: =>
+    @calories @caloriesEdit()
+    @editing false
+    MealsApp.UserConfig.update window.currentUser.id, @calories()
+    
+  cancel: =>
+    @editing false
+
 class MealsApp.MealsIndexViewModel
   
   constructor: (meals) ->
     @days = ko.observableArray(new DayMealsViewModel(m) for m in meals)
     @editor = MealEditor.create()
+    @configEditor = new UserConfiguration()
     
   newMeal: => 
     @editor.open(@save)

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   scope :api, as: 'api' do
     scope :v1, as: 'v1' do
       resources :meals, defaults: {format: :json}, only: [:index, :create, :update, :destroy], controller: :meals
+      resources :user, defaults: {format: :json}, only: [:update]
     end
   end
   
