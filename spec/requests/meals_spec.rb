@@ -106,10 +106,14 @@ RSpec.describe "Meals API", type: :request do
     end
 
     context 'When parameters are valid' do
+      let(:meals) { Meal.for_user(user) }
+      let(:json_meals) { JSON.parse meals.to_json(except: [:user_id, :created_at, :updated_at])}
+      
       it 'creates a new meal for the current user' do
         post api_v1_meals_path, {:format => :json, meal: new_meal}, headers
         expect(response).to have_http_status(:created)
         expect(JSON.parse response.body).to eq expected
+        expect(json_meals).to eq [expected]
       end
     end
     
