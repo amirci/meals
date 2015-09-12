@@ -138,7 +138,7 @@ class DayMealsViewModel
     @day    = @moment.format('MMM D')
     @month  = @moment.format('YYYY')
     @total  = ko.observable m.calories
-    @meals  = ko.observableArray(new MealViewModel(meal, @total) for meal in m.meals)
+    @meals  = ko.observableArray(new MealsApp.MealViewModel(meal, @total) for meal in m.meals)
 
     @matchTotal = ko.pureComputed => if @total() > @dailyIntake() then "red" else "green"
     
@@ -147,7 +147,7 @@ class DayMealsViewModel
     bigger = (i for d, i in @meals() when d.time() >= key)
     index = if bigger?.length then bigger[0] else @meals().length
 
-    @meals.splice index, 0, new MealViewModel(m, @total)
+    @meals.splice index, 0, new MealsApp.MealViewModel(m, @total)
     @total @total() + m.calories
     
   remove: (meal) =>
@@ -163,14 +163,17 @@ class DayMealsViewModel
 
   hideMeal: (elem) =>
     if elem.nodeType == 1
-      elem = if @total() == 0 then $(elem).closest('.date-reg') else $(elem).find('div')
-      elem.fadeOut 1000, -> elem.remove
+      dateReg = $(elem).closest('.date-reg')
+      if @total() == 0 
+        dateReg.fadeOut 1000, dateReg.remove
+      else 
+        $(elem).find('div').fadeOut 1000, -> $(elem).closest('.meal-reg').remove()
 
-class MealViewModel
+class MealsApp.MealViewModel
   
   constructor: (m, @total) ->
     @id       = m.id
-    @moment   = ko.observable moment(m.logged_at)
+    @moment   = ko.observable moment(m.logged_at, 'YYYY-MM-DDTHH:mm:ss.SSSZZ')
     @calories = ko.observable m.calories
     @time     = ko.pureComputed => @moment().format('HH:mm')
     @meal     = ko.observable m.meal

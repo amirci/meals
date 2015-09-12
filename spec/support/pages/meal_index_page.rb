@@ -52,7 +52,10 @@ class MealIndexPage
   def self.from_meals(days)
     days.map do |d|
       meals = d.meals.map do |m| 
-        DayMealsPart::MealReg.new m.id, m.logged_at.strftime('%H:%M'), m.calories, m.meal.strip
+        DayMealsPart::MealReg.new m.id, 
+          m.logged_at.strftime('%H:%M'), 
+          m.calories, 
+          m.meal.strip
       end
       DayMealsPart.new(d.date, d.calories, meals)
     end
@@ -94,8 +97,12 @@ class MealIndexPage
     class << self
       def parse_meals(node)
         node.all('.meal-reg', :visible => true).map do |mreg|
-          MealReg.new(mreg[:'data-id'].to_i, mreg.find('.time').text.strip, mreg.find('.calories').text.to_i, mreg.find('.meal').text.strip)
-        end
+          time = Time.parse mreg.find('.time').text.strip
+          MealReg.new(mreg[:'data-id'].to_i, 
+            time.in_time_zone(Time.zone).strftime('%H:%M'), 
+            mreg.find('.calories').text.to_i, 
+            mreg.find('.meal').text.strip)
+        end.sort_by(&:time)
       end
     
       def parse_total(node)
@@ -103,8 +110,8 @@ class MealIndexPage
       end
     
       def parse_date(node)
-        date = node.find('.info .date')
-        Date.parse date.find('.day').text + ', ' + date.find('.month').text
+        date = Time.parse node.find('.info .date').text
+        date.in_time_zone(Time.zone).to_date
       end
     end
   end
