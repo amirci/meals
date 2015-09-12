@@ -11,7 +11,7 @@ class MealsController < ApplicationController
 
   # POST /meals.json
   def create
-    @meal = Meal.new(meal_params)
+    @meal = current_user.meals.build(meal_params)
 
     if @meal.save
       render :show, status: :created, location: api_v1_meal_url(@meal)
