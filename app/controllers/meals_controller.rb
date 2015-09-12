@@ -31,15 +31,16 @@ class MealsController < ApplicationController
 
   # DELETE /meals/1.json
   def destroy
-    @meal.destroy
-    respond_to do |format|
-      format.json { head :no_content }
+    if @meal.destroy
+      render :show, status: :ok
+    else
+      render json: @meal.errors, status: :unprocessable_entity
     end
   end
 
   private
     def set_meal
-      @meal = Meal.find(params[:id])
+      @meal = Meal.for_user(current_user).find(params[:id])
     end
 
     def meal_params

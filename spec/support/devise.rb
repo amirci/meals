@@ -19,6 +19,14 @@ module ControllerMacros
   end
 end
 
+shared_examples_for "only_works_for_current_user" do
+  context 'when the meal does not belong to the user' do      
+    it 'does not do the op' do
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+end
+
 shared_examples_for "rejects_unauthorized_access" do
   context 'when not authorized' do
     it "returns unauthorized" do
