@@ -180,8 +180,9 @@ class DayMealsViewModel
     @date   = @moment.format('YYYY-MM-DD')
     @day    = @moment.format('MMM D')
     @month  = @moment.format('YYYY')
-    @total  = ko.observable m.calories
     @meals  = ko.observableArray(new MealsApp.MealViewModel(meal, @total) for meal in m.meals)
+    @total  = ko.pureComputed =>
+      (m.calories() for m in @meals()).reduce (m1, m2) -> m1 + m2
 
     @matchTotal = ko.pureComputed => 
       if @total() > @parent.configEditor.calories() then "red" else "green"
@@ -192,7 +193,6 @@ class DayMealsViewModel
     index = if bigger?.length then bigger[0] else @meals().length
 
     @meals.splice index, 0, new MealsApp.MealViewModel(m, @total)
-    @total @total() + m.calories
     
   remove: (meal) =>
     if confirm("Are you sure you want to remove -- #{meal.meal()} -- ?")
@@ -202,7 +202,6 @@ class DayMealsViewModel
         
   removeMeal: (meal) =>
     index = @meals.indexOf meal
-    @total @total() - meal.calories()
     @meals.splice index, 1
     @parent.days.remove @ if @total() == 0
 
