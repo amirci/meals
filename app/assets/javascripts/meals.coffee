@@ -96,7 +96,7 @@ class UserConfiguration
     @editFocus true
     
   save: =>
-    @calories @caloriesEdit()
+    @calories parseInt(@caloriesEdit()) || 0
     @editing false
     MealsApp.UserConfig.update @currentUser.id, @calories()
     
@@ -107,7 +107,7 @@ class MealsApp.MealsIndexViewModel
   
   constructor: (meals, currentUser) ->
     @configEditor = new UserConfiguration(currentUser)
-    @days = ko.observableArray(new DayMealsViewModel(@configEditor.calories, m) for m in meals)
+    @days = ko.observableArray(new DayMealsViewModel(@, m) for m in meals)
     @editor = MealEditor.create()
     
   newMeal: => 
@@ -125,14 +125,14 @@ class MealsApp.MealsIndexViewModel
     [found, index] = if bigger?.length then bigger[0] else [null, @days().length]
 
     unless found?.date == key
-      found = new DayMealsViewModel(@configEditor.calories, {date: meal.date, calories: 0, meals: []})
+      found = new DayMealsViewModel(@, {date: meal.date, calories: 0, meals: []})
       @days.splice(index, 0, found)
 
     found.addMeal(meal)
     
 class DayMealsViewModel
   
-  constructor: (@dailyIntake, m) ->
+  constructor: (@parent, m) ->
     @moment = moment(m.date)
     @date   = @moment.format('YYYY-MM-DD')
     @day    = @moment.format('MMM D')
@@ -140,7 +140,8 @@ class DayMealsViewModel
     @total  = ko.observable m.calories
     @meals  = ko.observableArray(new MealsApp.MealViewModel(meal, @total) for meal in m.meals)
 
-    @matchTotal = ko.pureComputed => if @total() > @dailyIntake() then "red" else "green"
+    @matchTotal = ko.pureComputed => 
+      if @total() > @parent.configEditor.calories() then "red" else "green"
     
   addMeal: (m) ->
     key = m.moment.format('HH:mm')
@@ -160,14 +161,11 @@ class DayMealsViewModel
     index = @meals.indexOf meal
     @total @total() - meal.calories()
     @meals.splice index, 1
+    @parent.days.remove @ if @total() == 0
 
   hideMeal: (elem) =>
     if elem.nodeType == 1
-      dateReg = $(elem).closest('.date-reg')
-      if @total() == 0 
-        dateReg.fadeOut 1000, dateReg.remove
-      else 
-        $(elem).find('div').fadeOut 1000, -> $(elem).closest('.meal-reg').remove()
+      $(elem).find('div').fadeOut 1000, -> $(elem).closest('.meal-reg').remove()
 
 class MealsApp.MealViewModel
   
