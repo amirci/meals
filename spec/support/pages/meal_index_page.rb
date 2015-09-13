@@ -97,7 +97,7 @@ class MealIndexPage
     
     class << self
       def parse_meals(node)
-        node.all('.meal-reg', :visible => true).map do |mreg|
+        node.all('.meal-reg', visible: true).map do |mreg|
           time, cal, *meal = mreg.text.split
           MealReg.new mreg[:'data-id'].to_i, 
             Time.parse(time).in_time_zone(Time.zone).strftime('%H:%M'), 

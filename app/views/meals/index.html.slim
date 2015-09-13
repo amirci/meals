@@ -17,12 +17,34 @@
     button.new-meal data-bind='click: newMeal' data-title='Add a new one'
       = fa_icon 'plus'
 
-  .empty-meals data-bind='visible: days().length == 0'
+  form#filter.form-inline data-bind='with: filter'
+    .form-group data-bind="css: {active: active}"
+      .input-group.date-time-picker.date-from
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'calendar'
+      .input-group.date-time-picker.date-to
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'calendar'
+      .input-group.date.date-time-picker.time-from
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'clock-o'
+      .input-group.date.date-time-picker.time-to
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'clock-o'
+    button.search data-bind='click: apply, visible: inactive'
+      = fa_icon 'search'                   
+    button.cancel data-bind='click: cancel, visible: active'
+      = fa_icon 'spinner', class: 'fa-spin'
+
+  .empty-meals data-bind='visible: emptyMeals'
     .message No entries available, please add a new one
+
+  .empty-meals data-bind='visible: emptyFilter'
+    .message No entries match the filter, please try again
 
   = render partial: 'form'
 
-  /! ko foreach: days
+  /! ko foreach: filtered
   .date-reg data-bind='css: matchTotal'
     .info
       .date 
@@ -61,3 +83,4 @@ coffee:
       todayBtn: "linked",
       todayHighlight: true
     })    
+    

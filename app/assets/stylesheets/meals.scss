@@ -62,6 +62,44 @@
     }
   }
   
+  #filter {
+    margin: 20px auto;
+    text-align:center;
+
+    .input-group-addon {
+      cursor: pointer;
+    }
+    
+    button.search {
+      @extend .btn;
+      @extend .btn-default;
+      
+      &:hover {
+        @extend .btn-success;
+      }
+    }
+    
+    button.cancel {
+      @extend .btn;
+      @extend .btn-danger;
+    }
+    
+    .date-from, .date-to {
+      width: 180px;
+    }
+    
+    .time-to, .time-from {
+      width: 140px;
+    }
+    
+    .form-group.active {
+      input, .input-group-addon {
+        border-color: $brand-info;
+        color: $brand-info;
+      }
+    }
+  }
+  
   .new-meal {
     @extend .btn;
     @extend .btn-default;

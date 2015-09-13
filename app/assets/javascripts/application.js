@@ -19,8 +19,10 @@
 //= require knockout.mapping
 //= require bootstrap-datepicker  
 //= require moment
+//= require bootstrap-datetimepicker
 //= require js-routes
 //= require pnotify
+//= require datetimehandler
     
 //= require handlers
 //= require meals_app
