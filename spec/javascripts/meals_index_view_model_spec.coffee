@@ -1,4 +1,14 @@
 
+describe 'MealsApp.MealViewModel', ->
+  
+  describe 'constructor', ->
+    
+    it 'creates all the values', ->
+      meal = {meal: 'Chicken', calories:1000, logged_at: "2015-08-11T19:00:00.000-05:00"}
+      vm = new MealsApp.MealViewModel meal, -> 0
+    
+      expect(vm.time()).toBe '19:00'
+      
 describe 'MealsApp.MealsIndexViewModel', ->
 
   user = {id:1, email: 'user@example.com', calores: 1200}

@@ -3,7 +3,12 @@
 class MealsApp.Meal
   
   constructor: (@id, @date, @meal, @calories) ->
-    @moment = moment(@date, [moment.ISO_8601, 'YYYY-MM-DD hh:mm:ss', 'YYYY-MM-DD hh:mm'])
+    @moment = moment(@date, [
+      moment.ISO_8601,
+      'YYYY-MM-DDTHH:mm:ss.SSSZZ',
+      'YYYY-MM-DD hh:mm:ss', 
+      'YYYY-MM-DD hh:mm'
+    ])
     @logged_at = @date
     
   @update: (meal, options={}) ->
@@ -23,7 +28,7 @@ class MealsApp.Meal
   @jsonData: (meal) ->
     data =
       meal:
-        logged_at: meal.date
+        logged_at: meal.moment.format('YYYY-MM-DDTHH:mm:ss.SSSZZ')
         calories: parseInt(meal.calories)
         meal: meal.meal.trim()
     

@@ -8,7 +8,7 @@ feature "Adding meals", js: true do
   
   let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with dumplings', calories: 2000 }
 
-  let(:user)  {create(:user)}
+  let(:user)  { create(:user) }
   
   before do
     login_as(user, :scope => :user)
@@ -24,8 +24,8 @@ feature "Adding meals", js: true do
       dialog.save
       
       eventually {
-        expect(meals_page.meal_list).to eq expected
         expect(Meal.all.count).to eq 3
+        expect(meals_page.meal_list).to eq expected
         expect(Meal.last.meal).to eq new_meal.meal
       }
     end
