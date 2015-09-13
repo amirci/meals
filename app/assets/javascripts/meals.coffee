@@ -113,32 +113,39 @@ class MealsFilter
     @active   = ko.observable false
     @inactive = ko.pureComputed => ! @active()
 
-    $('.date-time-picker').datetimepicker
+    $('#filter .date-from, #filter .date-to').datetimepicker
       ignoreReadonly: true
       format: 'MMM DD, YYYY'
       showClear: true
 
     $("#filter .time-from, #filter .time-to").datetimepicker 
-      format: 'LT'
       ignoreReadonly: true
       showClear: true
+      format: 'LT'
 
-    $("#filter .date-from").on 'dp.change', (ev) => @dateFrom ev.date
-    $("#filter .date-to"  ).on 'dp.change', (ev) => @dateTo   ev.date
-    $("#filter .time-from").on 'dp.change', (ev) => @timeFrom ev.date
-    $("#filter .time-to"  ).on 'dp.change', (ev) => @timeTo   ev.date
+    $("#filter .date-from").on 'dp.change', (ev) => @dateFrom ev.date?.format?('L')
+    $("#filter .date-to"  ).on 'dp.change', (ev) => @dateTo   ev.date?.format?('L')
+    $("#filter .time-from").on 'dp.change', (ev) => @timeFrom ev.date?.format?('HH:mm')
+    $("#filter .time-to"  ).on 'dp.change', (ev) => @timeTo   ev.date?.format?('HH:mm')
 
   filter: (day) =>
-    (!@dateFrom() || day.moment.isAfter @dateFrom()) &&
-    (!@dateTo()   || day.moment.isBefore @dateTo() )
+    (!@dateFrom() || day.moment.format('L') >= @dateFrom()) &&
+    (!@dateTo()   || day.moment.format('L') <= @dateTo()  )
+    
+  filterMeal: (m) =>
+    console.log ">>>> Checking time for #{@timeFrom()} and #{@timeTo()}"
+    # from = @timeFrom()?.format?('HH:mm')
+    # to = @timeTo()?.format?('HH:mm')
+    # (!from || m.time() >= from) &&
+    # (!to   || m.time() <= to)
+    (!@timeFrom() || m.time() >= @timeFrom()) &&
+    (!@timeTo()   || m.time() <= @timeTo())
     
   apply: =>
     @active true
-    # @meals.filtered (d for d in @meals.days() when @filter d)
 
   cancel: =>
     @active false
-    # @meals.filtered @meals.days()
     
 class MealsApp.MealsIndexViewModel
   
@@ -181,8 +188,12 @@ class DayMealsViewModel
     @day    = @moment.format('MMM D')
     @month  = @moment.format('YYYY')
     @meals  = ko.observableArray(new MealsApp.MealViewModel(meal, @total) for meal in m.meals)
+    @filtered = ko.pureComputed =>
+      (m for m in @meals() when @parent.filter.inactive() || @parent.filter.filterMeal m )
+      
     @total  = ko.pureComputed =>
-      (m.calories() for m in @meals()).reduce (m1, m2) -> m1 + m2
+      calories = (m.calories() for m in @filtered())
+      if calories.length then calories.reduce (m1, m2) -> m1 + m2 else 0
 
     @matchTotal = ko.pureComputed => 
       if @total() > @parent.configEditor.calories() then "red" else "green"
