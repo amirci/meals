@@ -4,7 +4,7 @@ feature "Adding meals", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
-  # let!(:old_meals) { create_list :lunch, 2, user: user }
+  let!(:old_meals) { create_list :lunch, 2, user: user }
   
   let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with dumplings', calories: 2000 }
 
@@ -15,7 +15,7 @@ feature "Adding meals", js: true do
     meals_page.open
   end
   
-  context 'When confirming', focus: true do
+  context 'When confirming' do
     let!(:dialog) { meals_page.begin_create_meal new_meal }
     
     let(:expected) { MealIndexPage.from_meals Meal.for_user(user).totals_by_date }
@@ -24,8 +24,8 @@ feature "Adding meals", js: true do
       dialog.save
       
       eventually {
-        expect(meals_page.meal_list).to eq expected
         expect(Meal.all.count).to eq 3
+        expect(meals_page.meal_list).to eq expected
         expect(Meal.last.meal).to eq new_meal.meal
       }
     end

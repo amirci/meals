@@ -87,7 +87,8 @@ class MealIndexPage
   
   class DayMealsPart < Struct.new(:day, :total, :meals)
     def self.parse(node)
-      DayMealsPart.new parse_date(node), parse_total(node), parse_meals(node)
+      meals = parse_meals(node)
+      DayMealsPart.new parse_date(node), parse_total(node), meals
     end
 
     private
@@ -97,11 +98,11 @@ class MealIndexPage
     class << self
       def parse_meals(node)
         node.all('.meal-reg', :visible => true).map do |mreg|
-          time = Time.parse mreg.find('.time').text.strip
-          MealReg.new(mreg[:'data-id'].to_i, 
-            time.in_time_zone(Time.zone).strftime('%H:%M'), 
-            mreg.find('.calories').text.to_i, 
-            mreg.find('.meal').text.strip)
+          time, cal, *meal = mreg.text.split
+          MealReg.new mreg[:'data-id'].to_i, 
+            Time.parse(time).in_time_zone(Time.zone).strftime('%H:%M'), 
+            cal.to_i, 
+            meal.join(' ')
         end.sort_by(&:time)
       end
     
@@ -110,7 +111,8 @@ class MealIndexPage
       end
     
       def parse_date(node)
-        date = Time.parse node.find('.info .date').text
+        time = node.find('.meal-reg .time').text.strip
+        date = Time.parse(node.find('.info .date').text + ' ' + time)
         date.in_time_zone(Time.zone).to_date
       end
     end
