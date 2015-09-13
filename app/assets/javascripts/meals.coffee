@@ -103,12 +103,44 @@ class UserConfiguration
   cancel: =>
     @editing false
 
+
+class MealsFilter
+  constructor: (@meals)->
+    @dateFrom = ko.observable moment()
+    @dateTo   = ko.observable moment()
+    @timeFrom = ko.observable moment()
+    @timeTo   = ko.observable moment()
+    @active   = ko.observable false
+    @inactive = ko.pureComputed => ! @active()
+
+    $('.date-time-picker').datetimepicker
+      ignoreReadonly: true
+      format: 'MMM DD, YYYY'
+      showClear: true
+
+    $("#filter .time-from, #filter .time-to").datetimepicker 
+      format: 'LT'
+      ignoreReadonly: true
+      showClear: true
+
+    $("#filter .date-from").on 'dp.change', (ev) => @dateFrom ev.date
+    $("#filter .date-to"  ).on 'dp.change', (ev) => @dateTo ev.date
+    $("#filter .time-from").on 'dp.change', (ev) => @timeFrom ev.date
+    $("#filter .time-to"  ).on 'dp.change', (ev) => @timeTo ev.date
+
+  apply: =>
+    @active true
+
+  cancel: =>
+    @active false
+    
 class MealsApp.MealsIndexViewModel
   
   constructor: (meals, currentUser) ->
     @configEditor = new UserConfiguration(currentUser)
     @days = ko.observableArray(new DayMealsViewModel(@, m) for m in meals)
     @editor = MealEditor.create()
+    @filter = new MealsFilter @
     
   newMeal: => 
     @editor.open(@save)

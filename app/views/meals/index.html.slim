@@ -17,6 +17,25 @@
     button.new-meal data-bind='click: newMeal' data-title='Add a new one'
       = fa_icon 'plus'
 
+  form#filter.form-inline data-bind='with: filter'
+    .form-group
+      .input-group.date-time-picker.date-from
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'calendar'
+      .input-group.date-time-picker.date-to
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'calendar'
+      .input-group.date.date-time-picker.time-from
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'clock-o'
+      .input-group.date.date-time-picker.time-to
+         input.form-control readonly='' type='text' 
+         span.input-group-addon= fa_icon 'clock-o'
+    button.btn.btn-default data-bind='click: apply, visible: inactive'
+      = fa_icon 'search'                   
+    button.btn.btn-default data-bind='click: cancel, visible: active'
+      = fa_icon 'close'                   
+
   .empty-meals data-bind='visible: days().length == 0'
     .message No entries available, please add a new one
 
@@ -61,3 +80,4 @@ coffee:
       todayBtn: "linked",
       todayHighlight: true
     })    
+    

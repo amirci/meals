@@ -75,8 +75,8 @@ module FoodDiary
     number.times { |i| create_for i.days.ago }
   end
   
-  def self.populate_month
-    create_days 30
+  def self.populate_month(user=nil)
+    create_days 30, user
   end
   
 end

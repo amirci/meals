@@ -6,3 +6,5 @@ ko.bindingHandlers.slideVisible =
   update: (element, valueAccessor) ->
     value = valueAccessor()
     if ko.unwrap(value) then $(element).slideDown() else $(element).slideUp()
+
+

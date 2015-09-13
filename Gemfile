@@ -33,6 +33,7 @@ gem 'simple_form'
 gem 'bootstrap-datepicker-rails'
 gem 'js-routes'
 gem 'pnotify-rails'
+gem 'bootstrap3-datetimepicker-rails'
 
 gem 'devise'
 gem 'simple_token_authentication', '~> 1.0'
