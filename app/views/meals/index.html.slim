@@ -54,7 +54,7 @@
         .panel-heading Total
         .panel-body data-bind='text: total() + " Cal."'
     .meals
-      /! ko foreach: {data: meals, beforeRemove: hideMeal}
+      /! ko foreach: {data: filtered, beforeRemove: hideMeal}
       .meal-reg data-bind="attr: {'data-id': id}"
         .time     data-bind='text: time'
         .calories data-bind='text: calories'
