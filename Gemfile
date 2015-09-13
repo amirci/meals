@@ -34,6 +34,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'js-routes'
 gem 'pnotify-rails'
 gem 'bootstrap3-datetimepicker-rails'
+gem 'activeadmin', github: 'activeadmin'
 
 gem 'devise'
 gem 'simple_token_authentication', '~> 1.0'

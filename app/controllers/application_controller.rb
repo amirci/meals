@@ -9,5 +9,13 @@ class ApplicationController < ActionController::Base
     # render what you want here
     render :json => @error_object.to_json, :status => :unprocessable_entity
   end
-  
+
+  def authenticate_admin_user!
+    authenticate_user!
+    unless current_user.admin?
+      flash[:alert] = "Unauthorized Access!"
+      redirect_to root_path
+    end
+  end
+    
 end
