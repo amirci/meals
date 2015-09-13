@@ -134,25 +134,24 @@ class MealsFilter
     
   apply: =>
     @active true
-    console.log ">>>> Filtering for #{@dateFrom()?.format?('MMM DD, YYYY')} to #{@dateTo()?.format?('MMM DD, YYYY')}"
-    @meals.days (d for d in @meals.original() when @filter d)
+    # @meals.filtered (d for d in @meals.days() when @filter d)
 
   cancel: =>
     @active false
-    @meals.days @meals.original()
+    # @meals.filtered @meals.days()
     
 class MealsApp.MealsIndexViewModel
   
   constructor: (meals, currentUser) ->
     @configEditor = new UserConfiguration(currentUser)
-    @original = ko.observableArray (new DayMealsViewModel(@, m) for m in meals)
-    @days = ko.observableArray @original()
-    @editor = MealEditor.create()
+    @days = ko.observableArray (new DayMealsViewModel(@, m) for m in meals)
     @filter = new MealsFilter @
+    @filtered = ko.computed => (d for d in @days() when @filter.inactive() || @filter.filter d)
+    @editor = MealEditor.create()
     
-    @emptyMeals  = ko.pureComputed => @days().length == 0 && @filter.inactive()
+    @emptyMeals  = ko.pureComputed => @filtered().length == 0 && @filter.inactive()
     
-    @emptyFilter = ko.pureComputed => @days().length == 0 && @filter.active()
+    @emptyFilter = ko.pureComputed => @filtered().length == 0 && @filter.active()
     
   newMeal: => 
     @editor.open(@save)
