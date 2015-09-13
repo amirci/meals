@@ -89,10 +89,7 @@ module TZAdjust
   end
 end
 
-FactoryGirl.define do  factory :admin_user do
-    
-  end
-  
+FactoryGirl.define do  
   
   factory :potential_user, class: User do
     email { Faker::Internet.email }
