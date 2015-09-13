@@ -124,23 +124,35 @@ class MealsFilter
       showClear: true
 
     $("#filter .date-from").on 'dp.change', (ev) => @dateFrom ev.date
-    $("#filter .date-to"  ).on 'dp.change', (ev) => @dateTo ev.date
+    $("#filter .date-to"  ).on 'dp.change', (ev) => @dateTo   ev.date
     $("#filter .time-from").on 'dp.change', (ev) => @timeFrom ev.date
-    $("#filter .time-to"  ).on 'dp.change', (ev) => @timeTo ev.date
+    $("#filter .time-to"  ).on 'dp.change', (ev) => @timeTo   ev.date
 
+  filter: (day) =>
+    (!@dateFrom() || day.moment.isAfter @dateFrom()) &&
+    (!@dateTo()   || day.moment.isBefore @dateTo() )
+    
   apply: =>
     @active true
+    console.log ">>>> Filtering for #{@dateFrom()?.format?('MMM DD, YYYY')} to #{@dateTo()?.format?('MMM DD, YYYY')}"
+    @meals.days (d for d in @meals.original() when @filter d)
 
   cancel: =>
     @active false
+    @meals.days @meals.original()
     
 class MealsApp.MealsIndexViewModel
   
   constructor: (meals, currentUser) ->
     @configEditor = new UserConfiguration(currentUser)
-    @days = ko.observableArray(new DayMealsViewModel(@, m) for m in meals)
+    @original = ko.observableArray (new DayMealsViewModel(@, m) for m in meals)
+    @days = ko.observableArray @original()
     @editor = MealEditor.create()
     @filter = new MealsFilter @
+    
+    @emptyMeals  = ko.pureComputed => @days().length == 0 && @filter.inactive()
+    
+    @emptyFilter = ko.pureComputed => @days().length == 0 && @filter.active()
     
   newMeal: => 
     @editor.open(@save)
