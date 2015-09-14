@@ -6,10 +6,12 @@ class MealsApp.Meal
     @moment = moment(@date, [
       moment.ISO_8601,
       'YYYY-MM-DDTHH:mm:ss.SSSZZ',
-      'YYYY-MM-DD hh:mm:ss', 
-      'YYYY-MM-DD hh:mm'
+      'YYYY-MM-DD HH:mm:ss', 
+      'YYYY-MM-DD HH:mm'
     ])
     @logged_at = @date
+    @day = @moment.format('YYYY-MM-DD')
+    @time = @moment.format('HH:mm')
     
   @update: (meal, options={}) ->
     Meal.apiCall meal, Routes.api_v1_meal_path(meal.id), 'PUT', options

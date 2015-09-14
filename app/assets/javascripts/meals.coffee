@@ -134,10 +134,6 @@ class MealsFilter
     
   filterMeal: (m) =>
     console.log ">>>> Checking time for #{@timeFrom()} and #{@timeTo()}"
-    # from = @timeFrom()?.format?('HH:mm')
-    # to = @timeTo()?.format?('HH:mm')
-    # (!from || m.time() >= from) &&
-    # (!to   || m.time() <= to)
     (!@timeFrom() || m.time() >= @timeFrom()) &&
     (!@timeTo()   || m.time() <= @timeTo())
     
@@ -151,7 +147,7 @@ class MealsApp.MealsIndexViewModel
   
   constructor: (meals, currentUser) ->
     @configEditor = new UserConfiguration(currentUser)
-    @days = ko.observableArray (new DayMealsViewModel(@, m) for m in meals)
+    @days = ko.observableArray @createMeals(meals)
     @filter = new MealsFilter @
     @filtered = ko.computed => (d for d in @days() when @filter.inactive() || @filter.filter d)
     @editor = MealEditor.create()
@@ -159,6 +155,14 @@ class MealsApp.MealsIndexViewModel
     @emptyMeals  = ko.pureComputed => @filtered().length == 0 && @filter.inactive()
     
     @emptyFilter = ko.pureComputed => @filtered().length == 0 && @filter.active()
+    
+  createMeals: (meals) =>
+    hash = {}
+    for m in meals
+      meal = new MealsApp.Meal m.id, m.logged_at, m.meal, m.calories
+      hash[meal.day] = new DayMealsViewModel(@, meal.moment) unless hash[meal.day]?
+      hash[meal.day].addMeal meal
+    (v for k, v of hash).sort (a, b) -> b.date.localeCompare a.date
     
   newMeal: => 
     @editor.open(@save)
@@ -169,27 +173,26 @@ class MealsApp.MealsIndexViewModel
     
   insertMeal: (meal, data) =>
     meal.id = data.id if data?.id
-    key = meal.moment.format('YYYY-MM-DD')
-    bigger = ([d, i] for d, i in @days() when d.date <= key)
+    bigger = ([d, i] for d, i in @days() when d.date <= meal.day)
 
     [found, index] = if bigger?.length then bigger[0] else [null, @days().length]
 
-    unless found?.date == key
-      found = new DayMealsViewModel(@, {date: meal.date, calories: 0, meals: []})
+    unless found?.date == meal.day
+      found = new DayMealsViewModel(@, meal.moment)
       @days.splice(index, 0, found)
 
     found.addMeal(meal)
     
 class DayMealsViewModel
   
-  constructor: (@parent, m) ->
-    @moment = moment(m.date)
+  constructor: (@parent, @moment) ->
     @date   = @moment.format('YYYY-MM-DD')
     @day    = @moment.format('MMM D')
     @month  = @moment.format('YYYY')
-    @meals  = ko.observableArray(new MealsApp.MealViewModel(meal, @total) for meal in m.meals)
+    @meals  = ko.observableArray []
+    
     @filtered = ko.pureComputed =>
-      (m for m in @meals() when @parent.filter.inactive() || @parent.filter.filterMeal m )
+      (m for m in @meals() when @parent.filter.inactive() || @parent.filter.filterMeal m)
       
     @total  = ko.pureComputed =>
       calories = (m.calories() for m in @filtered())
@@ -199,8 +202,7 @@ class DayMealsViewModel
       if @total() > @parent.configEditor.calories() then "red" else "green"
     
   addMeal: (m) ->
-    key = m.moment.format('HH:mm')
-    bigger = (i for d, i in @meals() when d.time() >= key)
+    bigger = (i for d, i in @meals() when d.time() >= m.time)
     index = if bigger?.length then bigger[0] else @meals().length
 
     @meals.splice index, 0, new MealsApp.MealViewModel(m, @total)
