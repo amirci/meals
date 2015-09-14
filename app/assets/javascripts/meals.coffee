@@ -241,7 +241,6 @@ class MealsApp.MealViewModel
     MealsApp.Meal.update meal, options
     
   updateMeal: (m) =>
-    @total @total() + m.calories - @calories()
     @moment   m.moment
     @calories m.calories
     @meal     m.meal

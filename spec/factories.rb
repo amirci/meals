@@ -106,30 +106,30 @@ FactoryGirl.define do
     end
     
     meal      { Dishes::dish }
-    logged_at { TZAdjust.local date }
+    logged_at { date.to_datetime }
     calories  { Faker::Number.between(100, 1200) }
 
     factory :supper do
-      after(:build) { |meal| meal.logged_at = TZAdjust.local(meal.logged_at).change(hour: 19, min:00) }
+      after(:build) { |meal| meal.logged_at = meal.logged_at.change(hour: 19, min:00) }
     end
 
     factory :lunch do
-      after(:build) { |meal| meal.logged_at = TZAdjust.local(meal.logged_at).change(hour: 12, min:30) }
+      after(:build) { |meal| meal.logged_at = meal.logged_at.change(hour: 12, min:30) }
     end
 
     factory :breakfast do
       meal { Dishes::breakfast }
-      after(:build) { |meal| meal.logged_at = TZAdjust.local(meal.logged_at).change(hour: 8, min:30) }
+      after(:build) { |meal| meal.logged_at = meal.logged_at.change(hour: 8, min:30) }
     end
     
     factory :morning_snack do
       meal { Dishes::snack }
-      after(:build) { |meal| meal.logged_at = TZAdjust.local(meal.logged_at).change(hour: 10, min:00) }
+      after(:build) { |meal| meal.logged_at = meal.logged_at.change(hour: 10, min:00) }
     end
 
     factory :afternoon_snack do
       meal { Dishes::snack }
-      after(:build) { |meal| meal.logged_at = TZAdjust.local(meal.logged_at).change(hour: 15, min:00) }
+      after(:build) { |meal| meal.logged_at = meal.logged_at.change(hour: 15, min:00) }
     end
 
     factory :invalid_meal do

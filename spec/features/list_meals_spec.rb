@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature "Meals Index", js: true do
+feature "Meals Index", js: true, focus:true do
   
   let(:meals_page) { MealIndexPage.new }
   
@@ -12,7 +12,7 @@ feature "Meals Index", js: true do
   
   context 'When meals exists in the database for the current user' do
     before do
-      FoodDiary.create_days 2, user: user
+      FoodDiary.create_days 2, user
     end
 
     scenario "Lists all the meals" do

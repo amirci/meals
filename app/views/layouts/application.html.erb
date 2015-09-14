@@ -22,7 +22,7 @@
         <div class="navbar-collapse collapse" id="navbar">
           <ul class="nav navbar-nav">
             <li class="active"><a href="<%= root_path %>">Home</a></li>
-            <% if current_user.admin? %>
+            <% if current_user && current_user.admin? %>
             <li class="active"><a href="<%= admin_root_path %>">Admin</a></li>
             <% end %>
           </ul>
