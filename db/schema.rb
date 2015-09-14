@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150913220243) do
+ActiveRecord::Schema.define(version: 20150914010313) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20150913220243) do
     t.string   "authentication_token"
     t.integer  "calories",               default: 1200
     t.boolean  "admin",                  default: false, null: false
+    t.boolean  "manager",                default: false, null: false
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token"

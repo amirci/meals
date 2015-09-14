@@ -5,11 +5,15 @@ class ApplicationController < ActionController::Base
 
   acts_as_token_authentication_handler_for User
   
-  rescue_from StandardError do |exception|
-    # render what you want here
-    render :json => @error_object.to_json, :status => :unprocessable_entity
-  end
+  # rescue_from StandardError do |exception|
+  #   # render what you want here
+  #   render :json => @error_object.to_json, :status => :unprocessable_entity
+  # end
 
+  def access_denied(exception)
+    redirect_to new_user_session_path, :alert => exception.message
+  end
+  
   def authenticate_admin_user!
     authenticate_user!
     unless current_user.admin?

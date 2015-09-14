@@ -1,47 +1,27 @@
-ActiveAdmin.register User do
+ActiveAdmin.register Meal do
+  
+  
+  permit_params :meal, :logged_at, :user_id, :calories
 
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if resource.something?
-#   permitted
-# end
-
-  permit_params :email, :calories, :password, :password_confirmation
-
-  filter :email
-  filter :last_sign_in_at
-  filter :created_at
-  filter :updated_at
+  filter :meal
+  filter :logged_at
+  filter :user_id
+  filter :calories
 
   index do
     column :id
-    column :email
+    column :user_id
+    column :logged_at
+    column :meal
     column :calories
-    column :admin
-    column :last_sign_in_at
-    column :created_at
-    column :updated_at
     actions
   end
 
   form do |f|
-    f.inputs 'Info' do
-      f.input :email
-      f.input :password
-      f.input :password_confirmation
-    end
-    f.inputs 'Role' do
-      f.input :admin, label: 'Administrator'
-    end
-    f.inputs 'Config' do
+    f.inputs 'Meal' do
+      f.input :meal
       f.input :calories
+      f.input :logged_at
     end
     f.actions
   end
