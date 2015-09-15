@@ -25,6 +25,8 @@ feature "Edit meal", js: true do
     it "Changes the meal information" do
       dialog.save
       
+      wait_for_ajax
+      
       eventually {
         expect(meals_page.meal_list).to eq expected
         expect(Meal.last.meal).to eq new_meal.meal

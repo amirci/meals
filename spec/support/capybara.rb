@@ -28,6 +28,24 @@ module AsyncHelper
       sleep interval
     end
   end
+
+  def wait_until(timeout = Capybara.default_wait_time)
+    Timeout.timeout(timeout) do
+      sleep(0.1) until value = yield
+      value
+    end
+  end
+    
+  def wait_for_ajax(timeout = Capybara.default_wait_time)
+    wait_until(timeout) do
+      return if page.evaluate_script('typeof jQuery == "undefined"') # if jQuery isn't loaded then doesn't make sense to check for ajax request termination
+      if Capybara.current_driver.to_s.starts_with? 'selenium'
+        page.evaluate_script 'jQuery.active <= 1' #selenium keeps reporting an active connection anyway
+      else
+        page.evaluate_script 'jQuery.active == 0'
+      end
+    end
+  end  
 end
 
 RSpec.configure do |config|
