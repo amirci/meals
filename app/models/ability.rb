@@ -12,6 +12,7 @@ class Ability
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, User
     end
+    
   end
 
 end
