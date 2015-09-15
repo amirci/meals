@@ -20,6 +20,7 @@ feature "Removing meals", js: true do
     it "Removes the meal" do
       meals_page.remove_meal meal, true
       
+      wait_for_ajax
       eventually {
         expect(meals_page.meal_list).to eq expected
         expect(Meal.all.count).to eq 1
