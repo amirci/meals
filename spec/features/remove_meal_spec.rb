@@ -15,7 +15,7 @@ feature "Removing meals", js: true do
   end
   
   context 'When confirming' do
-    let(:expected) { MealIndexPage.from_meals Meal.for_user(user).totals_by_date }
+    let(:expected) { MealIndexPage.from_meals user }
     
     it "Removes the meal" do
       meals_page.remove_meal meal, true
@@ -30,7 +30,7 @@ feature "Removing meals", js: true do
   end
   
   context 'When cancelling' do
-    let!(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
+    let!(:expected) { MealIndexPage.from_meals user }
     
     it "Does not remove the meal" do
       meals_page.remove_meal meal, false

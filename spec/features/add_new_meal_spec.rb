@@ -2,14 +2,14 @@ require 'rails_helper'
 
 feature "Adding meals", js: true do
   
+  let(:user)  { create(:user) }
+  
   let(:meals_page) { MealIndexPage.new }
   
   let!(:old_meals) { create_list :lunch, 2, user: user }
   
-  let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with dumplings', calories: 2000 }
+  let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with ginger', calories: 2000 }
 
-  let(:user)  { create(:user) }
-  
   before do
     login_as(user, :scope => :user)
     meals_page.open
@@ -18,7 +18,7 @@ feature "Adding meals", js: true do
   context 'When confirming' do
     let!(:dialog) { meals_page.begin_create_meal new_meal }
     
-    let(:expected) { MealIndexPage.from_meals Meal.for_user(user).totals_by_date }
+    let(:expected) { MealIndexPage.from_meals user }
     
     it "Adds the meal" do
       dialog.save
@@ -35,7 +35,7 @@ feature "Adding meals", js: true do
   context 'When cancelling' do
     let!(:dialog) { meals_page.begin_create_meal new_meal }
 
-    let!(:expected) { MealIndexPage.from_meals Meal.totals_by_date.map }
+    let!(:expected) { MealIndexPage.from_meals user }
     
     it "Does not add the meal" do
       dialog.cancel
