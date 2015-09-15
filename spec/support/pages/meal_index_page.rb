@@ -51,6 +51,7 @@ class MealIndexPage
   
   def self.from_meals(user)
     offset = Time.now.utc_offset / 3600
+    offset = -1 if offset == 0
     Meal.for_user(user).order('logged_at DESC')
       .group_by { |m| m.logged_at.in_time_zone(offset).to_date }
       .to_a
