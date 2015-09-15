@@ -49,16 +49,19 @@ class MealIndexPage
     has_css? '.message'
   end
   
-  def self.from_meals(days)
-    days.map do |d|
-      meals = d.meals.map do |m| 
-        DayMealsPart::MealReg.new m.id, 
-          m.logged_at.strftime('%H:%M'), 
-          m.calories, 
-          m.meal.strip
+  def self.from_meals(user)
+    offset = Time.now.utc_offset / 3600
+    Meal.for_user(user).order('logged_at DESC')
+      .group_by { |m| m.logged_at.in_time_zone(offset).to_date }
+      .to_a
+      .map do |date, meals|
+        local_meals = meals.map do |m| 
+          time = m.logged_at.in_time_zone(offset).strftime('%H:%M')
+          DayMealsPart::MealReg.new m.id, time, m.calories, m.meal.strip
+        end.sort_by(&:time)
+        total = local_meals.map(&:calories).sum
+        DayMealsPart.new date, total, local_meals
       end
-      DayMealsPart.new(d.date, d.calories, meals)
-    end
   end
 
   class ConfirmDialog
@@ -100,7 +103,8 @@ class MealIndexPage
         node.all('.meal-reg', visible: true).map do |mreg|
           time, cal, *meal = mreg.text.split
           MealReg.new mreg[:'data-id'].to_i, 
-            Time.parse(time).in_time_zone(Time.zone).strftime('%H:%M'), 
+            # Time.parse(time).in_time_zone(Time.zone).strftime('%H:%M'),
+            time,
             cal.to_i, 
             meal.join(' ')
         end.sort_by(&:time)
@@ -111,8 +115,8 @@ class MealIndexPage
       end
     
       def parse_date(node)
-        time = node.find('.meal-reg .time').text.strip
-        date = Time.parse(node.find('.info .date').text + ' ' + time)
+        # time = node.find('.meal-reg .time').text.strip
+        date = Time.parse(node.find('.info .date').text)
         date.in_time_zone(Time.zone).to_date
       end
     end

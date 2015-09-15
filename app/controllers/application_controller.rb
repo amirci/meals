@@ -5,10 +5,16 @@ class ApplicationController < ActionController::Base
 
   acts_as_token_authentication_handler_for User
   
-  # rescue_from StandardError do |exception|
-  #   # render what you want here
-  #   render :json => @error_object.to_json, :status => :unprocessable_entity
-  # end
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    # render what you want here
+    render :json => @error_object.to_json, :status => :not_found
+  end
+
+  rescue_from StandardError do |exception|
+    # render what you want here
+    render :json => @error_object.to_json, :status => :unprocessable_entity
+  end
+
 
   def access_denied(exception)
     redirect_to new_user_session_path, :alert => exception.message

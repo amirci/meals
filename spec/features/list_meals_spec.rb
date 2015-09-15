@@ -12,20 +12,20 @@ feature "Meals Index", js: true do
   
   context 'When meals exists in the database for the current user' do
     before do
-      FoodDiary.create_days 2, user: user
+      FoodDiary.create_days 2, user
     end
 
     scenario "Lists all the meals" do
       meals_page.open
       
-      expected = MealIndexPage.from_meals Meal.for_user(user).totals_by_date
+      expected = MealIndexPage.from_meals user
       
       expect(meals_page.meal_list).to eq expected
     end
   end
   
   context 'When no meals are available' do
-    it 'Shows an empty list message' do
+    scenario 'Shows an empty list message' do
       meals_page.open
 
       actual = meals_page.meal_list

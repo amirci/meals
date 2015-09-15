@@ -17,7 +17,7 @@ RSpec.describe MealsController, type: :controller do
     end
     
     it "assigns all meals grouped by date @meals for the current user" do
-      meals = Meal.for_user(user).totals_by_date
+      meals = Meal.for_user(user)
       get :index, {}, valid_session
       expect(assigns(:meals)).to eq meals
     end
