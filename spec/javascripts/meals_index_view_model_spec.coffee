@@ -18,7 +18,7 @@ describe 'MealsApp.MealsIndexViewModel', ->
     {id: 2, meal: 'Chicken', calories: 1000, logged_at: "2015-07-20T15:00:00.000Z"},
     {id: 3, meal: 'Tart'   , calories: 1000, logged_at: "2015-07-20T17:30:00.000Z"},
 
-    {id: 4, meal: 'Noodles', calories: 100 , logged_at: "2015-07-21T19:00:00.000Z"}
+    {id: 4, meal: 'Noodles', calories: 100 , logged_at: "2015-07-21T15:00:00.000Z"}
     {id: 5, meal: 'Apple'  , calories: 100 , logged_at: "2015-07-21T13:30:00.000Z"},
 
     {id: 6, meal: 'Chicken', calories: 1000, logged_at: "2015-07-22T13:30:00.000Z"},

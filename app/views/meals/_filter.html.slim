@@ -2,16 +2,16 @@ form#filter.form-inline data-bind='with: filter'
   button.clear  data-bind='click: clear' title='Clear the filter'= fa_icon 'trash'
   .form-group data-bind="css: {active: active}"
     .input-group.date-time-picker.date-from
-       input.form-control readonly='' type='text' 
+       input.form-control readonly='' type='text' placeholder='From Date'
        span.input-group-addon= fa_icon 'calendar'
     .input-group.date-time-picker.date-to
-       input.form-control readonly='' type='text' 
+       input.form-control readonly='' type='text' placeholder='To Date'
        span.input-group-addon= fa_icon 'calendar'
     .input-group.date.date-time-picker.time-from
-       input.form-control readonly='' type='text' 
+       input.form-control readonly='' type='text' placeholder='From Time'
        span.input-group-addon= fa_icon 'clock-o'
     .input-group.date.date-time-picker.time-to
-       input.form-control readonly='' type='text' 
+       input.form-control readonly='' type='text' placeholder='To Time'
        span.input-group-addon= fa_icon 'clock-o'
   button.search title='Apply the filter'  data-bind='click: apply, visible: inactive'= fa_icon 'filter'                   
   button.cancel title='Cancel the filter' data-bind='click: cancel, visible: active'= fa_icon 'spinner', class: 'fa-spin'
