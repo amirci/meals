@@ -70,17 +70,24 @@
       cursor: pointer;
     }
     
-    button.search {
+    button {
       @extend .btn;
       @extend .btn-default;
-      
+    }
+
+    button.clear {
+      &:hover {
+        @extend .btn-warning;
+      }
+    }
+    
+    button.search {
       &:hover {
         @extend .btn-success;
       }
     }
     
     button.cancel {
-      @extend .btn;
       @extend .btn-danger;
     }
     
