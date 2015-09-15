@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Api::V1::SessionsController, type: :request, focus: true do
+RSpec.describe Api::V1::SessionsController, type: :request do
 
   let(:pwd)  { 'bananascoladas' }
   let(:user) { create :user, password: pwd, password_confirmation: pwd, calories: 1000 }
@@ -15,10 +15,10 @@ RSpec.describe Api::V1::SessionsController, type: :request, focus: true do
       it 'resets the token for the user' do
         delete api_v1_session_path, {:format => :json}, headers 
         expect(response).to have_http_status(:ok)
-      
+        old_token = user.authentication_token
         user.reload
       
-        expect(user.authentication_token).to eq 'something'
+        expect(user.authentication_token).to_not eq old_token
       end
     end
 
