@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
 
-  # devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   devise_for :users
+
   resources :meals, only: [:index]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -14,6 +14,12 @@ Rails.application.routes.draw do
     scope :v1, as: 'v1' do
       resources :meals, defaults: {format: :json}, only: [:index, :create, :update, :destroy], controller: :meals
       resources :user, defaults: {format: :json}, only: [:update]
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resource :session, defaults: {format: :json}, only: [:create, :destroy]
     end
   end
   
