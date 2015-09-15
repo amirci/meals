@@ -14,33 +14,14 @@
   
   h1 
     span My meals
-    button.new-meal data-bind='click: newMeal' data-title='Add a new one'
+    button.new-meal data-bind='click: newMeal' title='Add a new meal'
       = fa_icon 'plus'
 
-  form#filter.form-inline data-bind='with: filter'
-    .form-group data-bind="css: {active: active}"
-      .input-group.date-time-picker.date-from
-         input.form-control readonly='' type='text' 
-         span.input-group-addon= fa_icon 'calendar'
-      .input-group.date-time-picker.date-to
-         input.form-control readonly='' type='text' 
-         span.input-group-addon= fa_icon 'calendar'
-      .input-group.date.date-time-picker.time-from
-         input.form-control readonly='' type='text' 
-         span.input-group-addon= fa_icon 'clock-o'
-      .input-group.date.date-time-picker.time-to
-         input.form-control readonly='' type='text' 
-         span.input-group-addon= fa_icon 'clock-o'
-    button.search data-bind='click: apply, visible: inactive'
-      = fa_icon 'search'                   
-    button.cancel data-bind='click: cancel, visible: active'
-      = fa_icon 'spinner', class: 'fa-spin'
 
   .empty-meals data-bind='visible: emptyMeals'
     .message No entries available, please add a new one
 
-  .empty-meals data-bind='visible: emptyFilter'
-    .message No entries match the filter, please try again
+  = render partial: 'filter'
 
   = render partial: 'form'
 
@@ -61,9 +42,9 @@
         .meal     data-bind='text: meal'
         .tools 
           button.edit data-bind="click: edit"
-            = fa_icon 'pencil', :'data-title' => 'Edit' 
+            = fa_icon 'pencil', :'title' => 'Edit' 
           button.delete data-bind="click: $parent.remove"
-            = fa_icon 'trash', :'data-title' => 'Delete'
+            = fa_icon 'trash', :'title' => 'Delete'
       /! /ko
   /! /ko
   

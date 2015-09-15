@@ -106,10 +106,10 @@ class UserConfiguration
 
 class MealsFilter
   constructor: (@meals)->
-    @dateFrom = ko.observable moment()
-    @dateTo   = ko.observable moment()
-    @timeFrom = ko.observable moment()
-    @timeTo   = ko.observable moment()
+    @dateFrom = ko.observable null
+    @dateTo   = ko.observable null
+    @timeFrom = ko.observable null
+    @timeTo   = ko.observable null
     @active   = ko.observable false
     @inactive = ko.pureComputed => ! @active()
 
@@ -127,13 +127,18 @@ class MealsFilter
     $("#filter .date-to"  ).on 'dp.change', (ev) => @dateTo   ev.date?.format?('L')
     $("#filter .time-from").on 'dp.change', (ev) => @timeFrom ev.date?.format?('HH:mm')
     $("#filter .time-to"  ).on 'dp.change', (ev) => @timeTo   ev.date?.format?('HH:mm')
+    
+    @clear()
 
+  clear: =>
+    for f in ['.date-to', '.date-from', '.time-from', '.time-to']
+      $(f)?.data("DateTimePicker")?.date(null)
+    
   filter: (day) =>
     (!@dateFrom() || day.moment.format('L') >= @dateFrom()) &&
     (!@dateTo()   || day.moment.format('L') <= @dateTo()  )
     
   filterMeal: (m) =>
-    console.log ">>>> Checking time for #{@timeFrom()} and #{@timeTo()}"
     (!@timeFrom() || m.time() >= @timeFrom()) &&
     (!@timeTo()   || m.time() <= @timeTo())
     

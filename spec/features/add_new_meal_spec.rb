@@ -6,7 +6,7 @@ feature "Adding meals", js: true do
   
   let(:meals_page) { MealIndexPage.new }
   
-  let!(:old_meals) { create_list :lunch, 2, user: user }
+  let!(:old_meals) { FoodDiary.create_days 2, user }
   
   let(:new_meal)   { build :supper, id: 3, meal: 'Chicken with ginger', calories: 2000 }
 
@@ -24,7 +24,7 @@ feature "Adding meals", js: true do
       dialog.save
       
       eventually {
-        expect(Meal.all.count).to eq 3
+        expect(Meal.all.count).to eq 11
         expect(meals_page.meal_list).to eq expected
         expect(Meal.last.meal).to eq new_meal.meal
       }
@@ -41,7 +41,7 @@ feature "Adding meals", js: true do
       dialog.cancel
 
       expect(meals_page.meal_list).to eq expected
-      expect(Meal.all.count).to eq 2
+      expect(Meal.all.count).to eq 10
     end
   end
   
