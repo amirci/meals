@@ -9,12 +9,12 @@
             label.col-xs-2 Date
             .col-xs-4
               .input-group.date.date-time-picker
-                input.form-control readonly='' type='text' title='Meal date'
+                input.form-control name='meal_date' readonly='' type='text' title='Meal date'
                 span.input-group-addon= fa_icon 'calendar'
             label.col-xs-1 Time
             .col-xs-3
               .input-group.time.date-time-picker
-                input.form-control type='text' readonly='' title='Meal time'
+                input.form-control name='meal_time' type='text' readonly='' title='Meal time'
                 span.input-group-addon= fa_icon 'clock-o'
 
           .form-group data-bind='validationElement: calories'

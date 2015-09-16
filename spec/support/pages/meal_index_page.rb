@@ -104,7 +104,6 @@ class MealIndexPage
         node.all('.meal-reg', visible: true).map do |mreg|
           time, cal, *meal = mreg.text.split
           MealReg.new mreg[:'data-id'].to_i, 
-            # Time.parse(time).in_time_zone(Time.zone).strftime('%H:%M'),
             time,
             cal.to_i, 
             meal.join(' ')
@@ -116,7 +115,6 @@ class MealIndexPage
       end
     
       def parse_date(node)
-        # time = node.find('.meal-reg .time').text.strip
         date = Time.parse(node.find('.info .date').text)
         date.in_time_zone(Time.zone).to_date
       end
@@ -125,8 +123,7 @@ class MealIndexPage
   
   def load_meal(meal, new_meal=true)
     fill_in('meal_date', with: meal.logged_at.strftime('%b %d, %Y')) if new_meal
-    select meal.logged_at.strftime('%H'), from: 'meal_hours'
-    select meal.logged_at.strftime('%M'), from: 'meal_minutes'
+    fill_in('meal_time', with: meal.logged_at.strftime('%H%M'))
     fill_in 'meal_calories', with: meal.calories
     fill_in 'meal_meal', with: meal.meal
     MealDialog.new

@@ -45,10 +45,14 @@ class MealEditor
       showClose: true
 
     @dateView.on 'dp.change', (ev) => @date ev.date
-    @timeView.on 'dp.change', (ev) => @date ev.date
-    
+    @timeView.on 'dp.change', (ev) => @date().set hour: ev.date.get('hour'), minute: ev.date.get('minute')
+
     @isNewMeal.subscribe (isNew) => @dateView.data('DateTimePicker').options ignoreReadonly: isNew
     
+    @date.subscribe (value) =>
+      @dateView.data('DateTimePicker').date value
+      @timeView.data('DateTimePicker').date value
+      
     @cal_vm = ko.pureComputed
       read: => @calories()
       write: (value) => @calories parseInt(value)
