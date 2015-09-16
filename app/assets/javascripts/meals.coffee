@@ -26,10 +26,10 @@ class MealEditor
     
     @id       = ko.observable -1
     @date     = ko.observable moment()
-    @calories = ko.observable()
     @hour     = ko.observable()
     @minutes  = ko.observable()
-    @meal     = ko.observable()
+    @meal     = ko.observable().extend required: true
+    @calories = ko.observable().extend min: 1
     
     @isNewMeal = ko.observable false
     
@@ -65,6 +65,12 @@ class MealEditor
     new MealsApp.Meal @id(), date, @meal(), @calories()
 
   save: =>
+    valid = ko.validatedObservable(@).isValid()
+    
+    new PNotify(title: 'Validation error', text: 'Please fix the error to continue', type: 'error')
+    
+    return unless valid
+    
     @saving true
     
     meal = @createMeal()

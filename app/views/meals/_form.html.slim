@@ -7,21 +7,27 @@
         form.form-horizontal
           .form-group
             label.col-xs-2 for='date' Date
-            .col-xs-3
-              input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm, enable: isNewMeal'
+            .col-xs-4
+              .input-group.date
+                input.form-control.date.date_picker type='text' name='meal_date' data-provide='datepicker' data-bind='value: date_vm, enable: isNewMeal'
+                span.input-group-addon= fa_icon 'calendar'
+                
             label.col-xs-1 Time
             .col-xs-4
               select.form-control.hours name='meal_hours' type='text' data-bind="options: hours_vm, value: hour"
               span.sep= ':'
               select.form-control.min name='meal_minutes' type='text' data-bind='options: minutes_vm, value: minutes'
-          .form-group
+              
+          .form-group data-bind='validationElement: calories'
             label.col-xs-2 Calories
             .col-xs-4
               input.form-control.calories name='meal_calories' type='number' data-bind='value: cal_vm'
-          .form-group
+              
+          .form-group data-bind='validationElement: meal'
             label.col-xs-2 Meal
             .col-xs-8
               input.form-control.meal name='meal_meal' type='text' data-bind='value: meal'
+              
       .modal-footer
         .buttons data-bind='visible: ! saving()'
           button.save   data-bind='click: save'   Save
