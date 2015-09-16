@@ -235,7 +235,7 @@ class DayMealsViewModel
     bigger = (i for d, i in @meals() when d.time() >= m.time)
     index = if bigger?.length then bigger[0] else @meals().length
 
-    @meals.splice index, 0, new MealsApp.MealViewModel(m, @total)
+    @meals.splice index, 0, new MealsApp.MealViewModel(m, @)
     
   remove: (meal) =>
     if confirm("Are you sure you want to remove -- #{meal.meal()} -- ?")
@@ -254,7 +254,7 @@ class DayMealsViewModel
 
 class MealsApp.MealViewModel
   
-  constructor: (m, @total) ->
+  constructor: (m, @parent) ->
     @id       = m.id
     @moment   = ko.observable moment(m.logged_at, 'YYYY-MM-DDTHH:mm:ss.SSSZZ')
     @calories = ko.observable m.calories
@@ -275,6 +275,8 @@ class MealsApp.MealViewModel
     @calories m.calories
     @meal     m.meal
     
+    @parent.meals.sort (m1, m2) => m1.time().localeCompare m2.time()
     $("[data-id='#{@id}'] div").effect('highlight', {}, 5000)
+    
     
     
