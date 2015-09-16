@@ -22,7 +22,8 @@ class ApplicationController < ActionController::Base
   
   def authenticate_admin_user!
     authenticate_user!
-    unless current_user.admin?
+    puts ">>> is the user admin? #{can? :read, ActiveAdmin::Page, :name => "Dashboard"}"
+    unless can? :read, ActiveAdmin::Page, :name => "Dashboard"
       flash[:alert] = "Unauthorized Access!"
       redirect_to root_path
     end
