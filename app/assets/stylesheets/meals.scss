@@ -92,11 +92,11 @@
     }
     
     .date-from, .date-to {
-      width: 180px;
+      width: 170px;
     }
     
     .time-to, .time-from {
-      width: 140px;
+      width: 150px;
     }
     
     .form-group.active {
@@ -149,8 +149,8 @@
     
     input, select { 
 //      margin-right: 20px;
-      height: auto;
-      padding: 5px 10px;
+//      height: auto;
+//      padding: 5px 10px;
     }
     
     select { 
@@ -164,7 +164,9 @@
       &:last-child { margin-bottom: 0;};
     }
     
-    input.date, input.calories { width: 120px; }
+    input.date, input.calories { 
+//      width: 120px;
+    }
     
     .hours { 
       margin-right: 5px; 
@@ -175,9 +177,20 @@
     .sep {
       margin-right: 2px;
     }
+    
+    label {
+      line-height: 3em;
+    }
     input.meal {
-      width: 50%;
-      min-width: 400px;
+    }
+    
+    .has-error {
+      label {
+        color: $brand-danger;
+      }
+      .form-control {
+        border-color: $brand-danger;
+      }
     }
   }
   
