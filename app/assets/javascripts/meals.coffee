@@ -141,6 +141,7 @@ class MealsFilter
       $(f)?.data("DateTimePicker")?.date(null)
     
   filter: (day) =>
+    day.filtered().length > 0 &&
     (!@dateFrom() || day.moment.format('L') >= @dateFrom()) &&
     (!@dateTo()   || day.moment.format('L') <= @dateTo()  )
     
