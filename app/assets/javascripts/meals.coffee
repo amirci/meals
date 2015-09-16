@@ -26,21 +26,32 @@ class MealEditor
     
     @id       = ko.observable -1
     @date     = ko.observable moment()
-    @hour     = ko.observable()
-    @minutes  = ko.observable()
     @meal     = ko.observable().extend required: true
     @calories = ko.observable().extend min: 1
     
     @isNewMeal = ko.observable false
     
-    @cal_vm     = ko.pureComputed
+    @dateView = $('.new-meal-form .date')
+    @timeView = $('.new-meal-form .time')
+
+    @dateView.datetimepicker
+      ignoreReadonly: @isNewMeal()
+      format: 'MMM DD, YYYY'
+      showClose: true
+    
+    @timeView.datetimepicker
+      ignoreReadonly: true
+      format: 'HH:mm'
+      showClose: true
+
+    @dateView.on 'dp.change', (ev) => @date ev.date
+    @timeView.on 'dp.change', (ev) => @date ev.date
+    
+    @isNewMeal.subscribe (isNew) => @dateView.data('DateTimePicker').options ignoreReadonly: isNew
+    
+    @cal_vm = ko.pureComputed
       read: => @calories()
       write: (value) => @calories parseInt(value)
-    @hours_vm   = ("#{h}".lpad(0, 2) for h in [0..23])
-    @minutes_vm = ("#{m * 5}".lpad(0, 2) for m in [0..11])
-    @date_vm    = ko.pureComputed
-      read: => @date().format('MMM D, YYYY')
-      write: (value) => @date moment(value, 'MMM D, YYYY')
   
   open: (saveMeal, current={}, newMeal=true) =>
     @saving false
@@ -52,24 +63,27 @@ class MealEditor
   load: (meal={}) =>
     @id       meal.id
     @date     meal.moment?() || moment()
+    @dateView.data('DateTimePicker').date @date()
+    @timeView.data('DateTimePicker').date @date()
     @calories meal.calories?() || 0
-    @hour     @date().format('HH')
-    @minutes  @date().format('mm')
     @meal     meal.meal?() || ''
 
   cancel: -> 
     $(".new-meal-form").modal('hide')
   
   createMeal: =>
-    date = @date().format('YYYY-MM-DD') + " #{@hour()}:#{@minutes()}"
+    date = @dateView.data('DateTimePicker').date()
+    time = @timeView.data('DateTimePicker').date()
+    date.set hour: time.get('hour'), minute: time.get('minute')
+    date = date.format('YYYY-MM-DDTHH:mm:ss.sssZZ')
     new MealsApp.Meal @id(), date, @meal(), @calories()
 
   save: =>
     valid = ko.validatedObservable(@).isValid()
     
-    new PNotify(title: 'Validation error', text: 'Please fix the error to continue', type: 'error')
-    
-    return unless valid
+    unless valid
+      new PNotify(title: 'Validation error', text: 'Please fix the error to continue', type: 'error')
+      return
     
     @saving true
     
